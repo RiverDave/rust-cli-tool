@@ -1,3 +1,20 @@
+//===----------------------------------------------------------------------===//
+//
+// Copyright (c) 2025 David Rivera
+//
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
+//
+// SPDX-License-Identifier: MIT
+//
+//===----------------------------------------------------------------------===//
+//
+// This module provides functionality to build the repository context.
+//
+//===----------------------------------------------------------------------===//
+//
+
+
 use crate::types::*;
 use crate::{files, git, output, tree};
 use git2::Repository;
