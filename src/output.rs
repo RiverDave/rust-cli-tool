@@ -14,12 +14,11 @@
 //===----------------------------------------------------------------------===//
 //
 
-
-use crate::{Cli, ContextManager, Config, FileEntry};
+use crate::{Cli, Config, ContextManager, FileEntry};
 
 pub fn generate_output(
     files: Vec<FileEntry>,
-    config: &Config
+    config: &Config,
 ) -> Result<(), Box<dyn std::error::Error>> {
     todo!("Generate output NYI")
 }

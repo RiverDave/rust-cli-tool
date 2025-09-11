@@ -9,11 +9,10 @@
 //
 //===----------------------------------------------------------------------===//
 //
-// This file defines the core data structures used across the repository 
+// This file defines the core data structures used across the repository
 // context packager library.
 //===----------------------------------------------------------------------===//
 //
-
 
 #[derive(Debug, Clone)]
 pub struct Config {
@@ -26,7 +25,7 @@ pub struct Config {
 #[derive(Debug, Clone)]
 pub struct FileEntry {
     pub path: String,
-    pub content: Option<String>,  // None for binary files
+    pub content: Option<String>, // None for binary files
     pub size: u64,
     pub is_binary: bool,
 }
@@ -50,3 +49,5 @@ pub struct RepositoryContext {
     pub total_files: usize,
     pub total_lines: usize,
 }
+
+// TODO: If we want to represent errors clearly with the user, we should define custom error types here

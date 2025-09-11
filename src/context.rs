@@ -1,5 +1,6 @@
 use crate::types::*;
-use crate::{files, git, tree, output};
+use crate::{files, git, output, tree};
+use git2::Repository;
 
 pub struct ContextManager {
     config: Config,
@@ -8,9 +9,12 @@ pub struct ContextManager {
 
 impl ContextManager {
     pub fn new(config: Config) -> Self {
-        Self { config, context: None }
+        Self {
+            config,
+            context: None,
+        }
     }
-    
+
     pub fn build_context(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         todo!("Build context NYI")
     }
@@ -23,5 +27,4 @@ impl ContextManager {
         //     Err("Context not built yet".into())
         // }
     }
-    
 }

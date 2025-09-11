@@ -14,8 +14,6 @@
 //===----------------------------------------------------------------------===//
 //
 
-pub fn build_tree(
-    root_path: &str
-) -> Result<String, Box<dyn std::error::Error>> {
+pub fn build_tree(root_path: &str) -> Result<String, Box<dyn std::error::Error>> {
     todo!()
 }

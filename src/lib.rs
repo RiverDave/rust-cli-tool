@@ -17,15 +17,15 @@
 /// Re-export main types for easy access
 pub use types::*;
 
-/// Internal modules
-pub mod types;
 pub mod cli;
 pub mod context;
 pub mod files;
 pub mod git;
-pub mod tree;
 pub mod output;
+pub mod tree;
+/// Internal modules
+pub mod types;
 
 // Re-export key functionality
-pub use context::ContextManager;
 pub use cli::Cli;
+pub use context::ContextManager;

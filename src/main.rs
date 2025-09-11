@@ -10,16 +10,16 @@
 //===----------------------------------------------------------------------===//
 //
 // Entry point for the repository context packager application.
-// 
+//
 //===----------------------------------------------------------------------===//
 //
 
-use cli_rust::{Cli, ContextManager, Config};
 use clap::Parser;
+use cli_rust::{Cli, Config, ContextManager};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
-    
+
     let config = Config {
         paths: cli.paths,
         output_file: cli.output,
@@ -28,12 +28,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     println!("Config: {:?}", config);
-    
+
     let mut manager = ContextManager::new(config);
     manager.build_context()?;
-    
+
     let output = manager.generate_output()?;
     println!("{}", output);
-    
+
     Ok(())
 }

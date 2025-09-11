@@ -19,11 +19,10 @@ use clap::Parser;
 #[command(name = "repo-context")]
 #[command(about = "Package repository context for LLMs")]
 
-
 pub struct Cli {
     /// Paths to analyze
     pub paths: Vec<String>,
-    
+
     /// Output file (default: stdout)
     #[arg(short, long)]
     pub output: Option<String>,

@@ -14,14 +14,13 @@
 //===----------------------------------------------------------------------===//
 //
 
-
-use crate::types::{FileEntry, Config};
+use crate::types::{Config, FileEntry};
 
 // We might want to include as a dependency `ignore` crate for better file discovery
 
 pub fn discover_files(
-    root_path: &str, 
-    config: &Config
+    root_path: &str,
+    config: &Config,
 ) -> Result<Vec<FileEntry>, Box<dyn std::error::Error>> {
     todo!()
 }

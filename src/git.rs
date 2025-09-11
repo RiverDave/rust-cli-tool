@@ -15,12 +15,8 @@
 //===----------------------------------------------------------------------===//
 //
 
-
 use crate::types::GitInfo;
 
-
-pub fn extract_git_info(
-    root_path: &str
-) -> Result<GitInfo, Box<dyn std::error::Error>> {
+pub fn extract_git_info(root_path: &str) -> Result<GitInfo, Box<dyn std::error::Error>> {
     todo!()
 }
