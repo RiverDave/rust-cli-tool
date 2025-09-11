@@ -16,10 +16,12 @@
 
 #[derive(Debug, Clone)]
 pub struct Config {
-    pub paths: Vec<String>,
+    // I'm against multiple paths in this release, but we can support it later.
+    pub root_path: String,
     pub output_file: Option<String>,
     pub include_patterns: Vec<String>,
     pub exclude_patterns: Vec<String>,
+    pub is_recursive: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -39,15 +41,11 @@ pub struct GitInfo {
     pub date: Option<String>,
 }
 
-// TODO: This should be linked with libgit2::Repository for more details?
 #[derive(Debug)]
 pub struct RepositoryContext {
     pub root_path: String,
     pub git_info: GitInfo,
     pub files: Vec<FileEntry>,
-    pub tree_structure: String,
-    pub total_files: usize,
-    pub total_lines: usize,
 }
 
 // TODO: If we want to represent errors clearly with the user, we should define custom error types here

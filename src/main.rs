@@ -21,10 +21,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     let config = Config {
-        paths: cli.paths,
+        root_path: cli.path,
         output_file: cli.output,
         include_patterns: cli.include.unwrap_or_default(),
         exclude_patterns: cli.exclude.unwrap_or_default(),
+        is_recursive: cli.recursive,
     };
 
     println!("Config: {:?}", config);
@@ -32,8 +33,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut manager = ContextManager::new(config);
     manager.build_context()?;
 
-    let output = manager.generate_output()?;
-    println!("{}", output);
+    manager.generate_output()?;
 
     Ok(())
 }

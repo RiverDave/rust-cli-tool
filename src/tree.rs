@@ -14,6 +14,12 @@
 //===----------------------------------------------------------------------===//
 //
 
-pub fn build_tree(root_path: &str) -> Result<String, Box<dyn std::error::Error>> {
-    todo!()
+use crate::FileEntry;
+
+pub fn build_tree(files: Vec<FileEntry>) -> Result<(), Box<dyn std::error::Error>> {
+    files.iter().for_each(|f| {
+        println!("File: {:?}", f.path);
+    });
+
+    Ok(())
 }

@@ -15,8 +15,34 @@
 //===----------------------------------------------------------------------===//
 //
 
+use chrono::{DateTime, Utc};
+use git2::Repository;
+
 use crate::types::GitInfo;
 
-pub fn extract_git_info(root_path: &str) -> Result<GitInfo, Box<dyn std::error::Error>> {
-    todo!()
+/// Extracts Git information from the given repository.
+pub fn extract_git_info(repo: &Repository) -> Result<GitInfo, Box<dyn std::error::Error>> {
+    let head = repo.head()?;
+    let branch_name = head.shorthand().unwrap_or("unknown").to_string();
+
+    // Get the latest commit hash
+    let commit = head.peel_to_commit()?;
+    let commit_hash = commit.id().to_string();
+
+    // Get author information
+    let signature = commit.author();
+    let author_name = signature.name().unwrap_or("Unknown").to_string();
+
+    // Get commit date
+    let timestamp = signature.when();
+    let datetime = DateTime::from_timestamp(timestamp.seconds(), 0).unwrap_or_else(|| Utc::now());
+    let date_string = datetime.format("%Y-%m-%d").to_string();
+
+    Ok(GitInfo {
+        is_repo: true,
+        commit_hash: Some(commit_hash),
+        branch: Some(branch_name),
+        author: Some(author_name),
+        date: Some(date_string),
+    })
 }
