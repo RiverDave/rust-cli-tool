@@ -1,0 +1,131 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "cargo build",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"build"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "cargo build (release)",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"build",
+				"--release"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "cargo run",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"run",
+				"--",
+				"."
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "test",
+			"dependsOn": "cargo build"
+		},
+		{
+			"label": "cargo run (with args)",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"run",
+				"--",
+				"${input:programArgs}"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "test",
+			"dependsOn": "cargo build"
+		},
+		{
+			"label": "cargo test",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"test"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "cargo check",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"check"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "cargo clean",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"clean"
+			],
+			"group": "build"
+		},
+		{
+			"label": "cargo fmt",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"fmt"
+			],
+			"group": "build"
+		},
+		{
+			"label": "cargo clippy",
+			"type": "shell",
+			"command": "cargo",
+			"args": [
+				"clippy",
+				"--",
+				"-D",
+				"warnings"
+			],
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build"
+		}
+	],
+	"inputs": [
+		{
+			"id": "programArgs",
+			"description": "Program arguments",
+			"default": ".",
+			"type": "promptString"
+		}
+	]
+}

@@ -1,3 +1,39 @@
-fn main() {
-    println!("Hello, world!");
+//===----------------------------------------------------------------------===//
+//
+// Copyright (c) 2025 David Rivera
+//
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
+//
+// SPDX-License-Identifier: MIT
+//
+//===----------------------------------------------------------------------===//
+//
+// Entry point for the repository context packager application.
+// 
+//===----------------------------------------------------------------------===//
+//
+
+use cli_rust::{Cli, ContextManager, Config};
+use clap::Parser;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let cli = Cli::parse();
+    
+    let config = Config {
+        paths: cli.paths,
+        output_file: cli.output,
+        include_patterns: cli.include.unwrap_or_default(),
+        exclude_patterns: cli.exclude.unwrap_or_default(),
+    };
+
+    println!("Config: {:?}", config);
+    
+    let mut manager = ContextManager::new(config);
+    manager.build_context()?;
+    
+    let output = manager.generate_output()?;
+    println!("{}", output);
+    
+    Ok(())
 }

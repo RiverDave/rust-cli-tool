@@ -1,0 +1,84 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug executable 'cli-rust'",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=cli-rust",
+					"--package=cli-rust"
+				],
+				"filter": {
+					"name": "cli-rust",
+					"kind": "bin"
+				}
+			},
+			"args": [
+				"."
+			],
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"sourceLanguages": [
+				"rust"
+			]
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug executable 'cli-rust' (with args)",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=cli-rust",
+					"--package=cli-rust"
+				],
+				"filter": {
+					"name": "cli-rust",
+					"kind": "bin"
+				}
+			},
+			"args": [
+				"${input:debugArgs}"
+			],
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"sourceLanguages": [
+				"rust"
+			]
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug unit tests in library 'cli-rust'",
+			"cargo": {
+				"args": [
+					"test",
+					"--no-run",
+					"--lib",
+					"--package=cli-rust"
+				],
+				"filter": {
+					"name": "cli-rust",
+					"kind": "lib"
+				}
+			},
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			"console": "integratedTerminal",
+			"sourceLanguages": [
+				"rust"
+			]
+		}
+	],
+	"inputs": [
+		{
+			"id": "debugArgs",
+			"description": "Debug arguments",
+			"default": ".",
+			"type": "promptString"
+		}
+	]
+}
