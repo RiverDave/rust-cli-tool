@@ -35,7 +35,7 @@ pub fn extract_git_info(repo: &Repository) -> Result<GitInfo, Box<dyn std::error
 
     // Get commit date
     let timestamp = signature.when();
-    let datetime = DateTime::from_timestamp(timestamp.seconds(), 0).unwrap_or_else(|| Utc::now());
+    let datetime = DateTime::from_timestamp(timestamp.seconds(), 0).unwrap_or_else(Utc::now);
     let date_string = datetime.format("%Y-%m-%d").to_string();
 
     Ok(GitInfo {

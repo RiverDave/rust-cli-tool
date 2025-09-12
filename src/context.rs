@@ -41,14 +41,11 @@ impl ContextManager {
             Err(e) => return Err(format!("Failed to open repository: {}", e).into()),
         };
 
-        // Initialize file context from root path
-        let file_ctx = FileContext::from_root(self.config.clone(), &self.config.root_path)?;
-
         // Utilize all modules to build the context
         self.context = Some(RepositoryContext {
             root_path: repo.path().to_str().unwrap_or("").to_string(),
             git_info: git::extract_git_info(&repo)?,
-            file_ctx: file_ctx,
+            file_ctx: FileContext::from_root(self.config.clone(), &self.config.root_path)?,
         });
 
         assert!(self.context.is_some());
