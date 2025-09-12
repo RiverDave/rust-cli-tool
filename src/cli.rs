@@ -18,7 +18,6 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(name = "repo-context")]
 #[command(about = "Package repository context for LLMs")]
-
 /// Main CLI structure for the application.
 pub struct Cli {
     /// Path to analyze

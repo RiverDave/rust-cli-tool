@@ -1,0 +1,9 @@
+[rust-analyzer]
+# Enable clippy diagnostics
+check.command = "clippy"
+check.extraArgs = ["--", "-D", "warnings"]
+
+# Alternative: Use cargo check with clippy
+# check.command = "cargo"
+# check.extraArgs = ["clippy", "--", "-D", "warnings"]
+

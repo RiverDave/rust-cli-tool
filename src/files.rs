@@ -90,10 +90,10 @@ impl FileContext {
             let entry_path = entry.path();
 
             // Skip hidden files and directories (starting with .)
-            if let Some(name) = entry_path.file_name() {
-                if name.to_string_lossy().starts_with('.') {
-                    continue;
-                }
+            if let Some(name) = entry_path.file_name()
+                && name.to_string_lossy().starts_with('.')
+            {
+                continue;
             }
 
             // Compute relative path (fallback to absolute if cannot strip)
@@ -104,18 +104,18 @@ impl FileContext {
             let rel_str = rel_path.to_string_lossy();
 
             // Exclude patterns: if any match, skip
-            if let Some(exclude) = exclude_set {
-                if exclude.is_match(rel_str.as_ref()) {
-                    continue;
-                }
+            if let Some(exclude) = exclude_set
+                && exclude.is_match(rel_str.as_ref())
+            {
+                continue;
             }
 
             if entry_path.is_file() {
                 // Include patterns: if provided and none match, skip
-                if let Some(include) = include_set {
-                    if !include.is_match(rel_str.as_ref()) {
-                        continue;
-                    }
+                if let Some(include) = include_set
+                    && !include.is_match(rel_str.as_ref())
+                {
+                    continue;
                 }
 
                 match create_file_entry(&entry_path) {
@@ -151,7 +151,7 @@ fn build_globset(patterns: &[String]) -> Result<globset::GlobSet, Box<dyn std::e
 
     for pattern in patterns {
         let glob = Glob::new(pattern)?;
-        builder.add(glob);
+        _ = builder.add(glob);
     }
 
     Ok(builder.build()?)
@@ -167,10 +167,7 @@ fn create_file_entry(path: &Path) -> Result<FileEntry, Box<dyn std::error::Error
     // Read content if it's not binary and not too large (e.g., < 1MB)
     // It'd be fun if the user could configure this limit, too complex for now
     let content = if !is_binary && size < 1_000_000 {
-        match fs::read_to_string(path) {
-            Ok(content) => Some(content),
-            Err(_) => None, // Treat as binary if we can't read as UTF-8
-        }
+        fs::read_to_string(path).ok() // Treat as binary if we can't read as UTF-8
     } else {
         None
     };

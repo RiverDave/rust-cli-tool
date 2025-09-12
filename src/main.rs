@@ -17,6 +17,7 @@
 use clap::Parser;
 use cli_rust::{Cli, Config, ContextManager};
 
+#[allow(deprecated)]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 

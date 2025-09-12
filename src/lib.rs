@@ -15,6 +15,7 @@
 //
 
 /// Re-export main types for easy access
+#[allow(clippy::all)]
 pub use types::*;
 
 pub mod cli;

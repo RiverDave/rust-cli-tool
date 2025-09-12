@@ -2,6 +2,12 @@
 name = "cli-rust"
 version = "0.1.0"
 edition = "2024"
+authors = ["David Rivera <davidriverg@gmail.com>"]
+description = "A Rust CLI tool for file operations"
+license = "MIT"
+repository = "https://github.com/RiverDave/cli-rust"
+keywords = ["cli", "files", "rust"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.47", features = ["derive"] }
@@ -14,3 +20,41 @@ ptree = "0.5.2"
 
 [dev-dependencies]
 tempfile = "3.10"
+
+[profile.release]
+# Optimize for size
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.dev]
+# Faster compilation in development
+opt-level = 0
+debug = true
+split-debuginfo = "unpacked"
+
+# Linting configuration
+[lints.rust]
+unsafe_code = "forbid"
+trivial_casts = "warn"
+trivial_numeric_casts = "warn"
+unused_import_braces = "warn"
+unused_results = "warn"
+unused_must_use = "warn"
+unused_imports = "warn"
+unused_assignments = "warn"
+unused_mut = "warn"
+unused_parens = "warn"
+unused_attributes = "warn"
+unused_braces = "warn"
+unused_comparisons = "warn"
+unused_extern_crates = "warn"
+unused_features = "warn"
+unused_labels = "warn"
+unused_lifetimes = "warn"
+unused_macro_rules = "warn"
+unused_qualifications = "warn"
+unused_unsafe = "warn"
+unused_variables = "warn"
