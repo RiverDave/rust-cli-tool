@@ -14,9 +14,8 @@
 //===----------------------------------------------------------------------===//
 //
 
-
+use crate::git;
 use crate::types::*;
-use crate::{files, git, output, tree};
 use git2::Repository;
 
 pub struct ContextManager {
@@ -42,12 +41,15 @@ impl ContextManager {
             Err(e) => return Err(format!("Failed to open repository: {}", e).into()),
         };
 
+        // In a perfect world, we would borrow here, However the cost is affordable in this context
+        let file_ctx = FileContext::new(self.config.clone());
+        file_ctx.build_file_context(&self.config.root_path)?;
+
         // Utilize all modules to build the context
         self.context = Some(RepositoryContext {
             root_path: repo.path().to_str().unwrap_or("").to_string(),
             git_info: git::extract_git_info(&repo)?,
-            files: files::discover_files(&self.config.root_path, &self.config)?,
-            // TODO: File Context
+            file_ctx: file_ctx,
         });
 
         assert!(self.context.is_some());
@@ -55,10 +57,17 @@ impl ContextManager {
         Ok(())
     }
 
+    /// Generate output based on the built context (This is to be replaced with proper output handling)
     pub fn generate_output(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.context.as_ref().unwrap().files.iter().for_each(|f| {
-            println!("Discovered File: {:?}", f.path);
-        });
+        self.context
+            .as_ref()
+            .unwrap()
+            .file_ctx
+            .file_entries
+            .iter()
+            .for_each(|f| {
+                println!("Discovered File: {:?}", f.path);
+            });
 
         Ok(())
     }

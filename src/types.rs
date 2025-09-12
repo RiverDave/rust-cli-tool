@@ -16,7 +16,7 @@
 
 #[derive(Debug, Clone)]
 pub struct Config {
-    // I'm against multiple paths in this release, but we can support it later.
+    // I'm against multiple paths in this release(0.1), but we can support it later.
     pub root_path: String,
     pub output_file: Option<String>,
     pub include_patterns: Vec<String>,
@@ -45,7 +45,13 @@ pub struct GitInfo {
 pub struct RepositoryContext {
     pub root_path: String,
     pub git_info: GitInfo,
-    pub files: Vec<FileEntry>,
+    pub file_ctx: FileContext,
+}
+
+#[derive(Debug)]
+pub struct FileContext {
+    pub file_entries: Vec<FileEntry>,
+    pub config: Config, // pub tree: Vec<TreeEntry>, TODO
 }
 
 // TODO: If we want to represent errors clearly with the user, we should define custom error types here
