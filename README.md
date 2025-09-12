@@ -28,6 +28,8 @@ cargo build --release
 
 ## Quick Start
 
+**Note:** Only one path argument is supported.
+
 ```bash
 # Scan current directory
 ./cli-rust .

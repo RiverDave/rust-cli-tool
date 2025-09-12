@@ -22,7 +22,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     let config = Config {
-        root_path: cli.path,
+        root_path: cli.repo_path,
         output_file: cli.output,
         include_patterns: cli.include.unwrap_or_default(),
         exclude_patterns: cli.exclude.unwrap_or_default(),
