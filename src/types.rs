@@ -16,7 +16,7 @@
 
 #[derive(Debug, Clone)]
 pub struct Config {
-    // I'm against multiple paths in this release(0.1), but we can support it later.
+    // will only support the original repo path
     pub root_path: String,
     pub output_file: Option<String>,
     pub include_patterns: Vec<String>,
