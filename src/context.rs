@@ -41,9 +41,8 @@ impl ContextManager {
             Err(e) => return Err(format!("Failed to open repository: {}", e).into()),
         };
 
-        // In a perfect world, we would borrow here, However the cost is affordable in this context
-        let file_ctx = FileContext::new(self.config.clone());
-        file_ctx.build_file_context(&self.config.root_path)?;
+        // Initialize file context from root path
+        let file_ctx = FileContext::from_root(self.config.clone(), &self.config.root_path)?;
 
         // Utilize all modules to build the context
         self.context = Some(RepositoryContext {
@@ -58,6 +57,10 @@ impl ContextManager {
     }
 
     /// Generate output based on the built context (This is to be replaced with proper output handling)
+    /// Pretty printing perhaps?
+    #[deprecated(
+        note = "This is a placeholder method and will be replaced with proper output handling."
+    )]
     pub fn generate_output(&self) -> Result<(), Box<dyn std::error::Error>> {
         self.context
             .as_ref()

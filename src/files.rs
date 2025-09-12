@@ -28,16 +28,17 @@ impl FileContext {
         }
     }
 
-    pub fn build_file_context(&self, root_path: &str) -> Result<Self, Box<dyn std::error::Error>> {
+    /// Create a new FileContext with files discovered from the given root path
+    pub fn from_root(config: Config, root_path: &str) -> Result<Self, Box<dyn std::error::Error>> {
+        let files = Self::discover_files(root_path, &config)?;
         Ok(Self {
-            file_entries: self.discover_files(root_path, &self.config)?,
-            config: self.config.clone(),
+            file_entries: files,
+            config,
         })
     }
 
-    /// Uses Context to discover files
+    /// Discover files in the given root path
     pub fn discover_files(
-        &self,
         root_path: &str,
         config: &Config,
     ) -> Result<Vec<FileEntry>, Box<dyn std::error::Error>> {
@@ -52,20 +53,14 @@ impl FileContext {
         };
 
         // Start traversal
-        Self::traverse_directory(
-            self,
-            root_path,
-            config,
-            &mut files,
-            &exclude_set,
-            &include_set,
-        )?;
+        Self::traverse_directory(root_path, config, &mut files, &exclude_set, &include_set)?;
+
+        assert!(files.len() > 0);
 
         Ok(files)
     }
 
     fn traverse_directory(
-        &self,
         dir_path: &str,
         config: &Config,
         files: &mut Vec<FileEntry>,
@@ -113,14 +108,7 @@ impl FileContext {
                 }
             } else if entry_path.is_dir() && config.is_recursive {
                 // Recursively traverse subdirectories
-                Self::traverse_directory(
-                    self,
-                    &file_name,
-                    config,
-                    files,
-                    exclude_set,
-                    include_set,
-                )?;
+                Self::traverse_directory(&file_name, config, files, exclude_set, include_set)?;
             }
         }
 
