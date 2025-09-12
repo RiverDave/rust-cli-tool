@@ -89,7 +89,7 @@ Examples:
 Gotchas:
 
 - To exclude an entire directory tree, prefer `dir/**` (not just `dir/*`).
-- Include patterns are ANDed via OR logic: any match keeps the file.
+- Include patterns use OR logic: any match keeps the file.
 - Exclude wins over include (a file matching both is excluded).
 - Binary detection is heuristic (null byte scan of first 512 bytes) and such files have no inlined content.
 
