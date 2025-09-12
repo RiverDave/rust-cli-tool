@@ -16,7 +16,7 @@
 
 use globset::{Glob, GlobSetBuilder};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::types::{Config, FileContext, FileEntry};
 
@@ -45,7 +45,12 @@ impl FileContext {
         let mut files = Vec::new();
 
         // Build globsets for include and exclude patterns
-        let exclude_set = build_globset(&config.exclude_patterns)?;
+        let exclude_set = if config.exclude_patterns.is_empty() {
+            None
+        } else {
+            Some(build_globset(&config.exclude_patterns)?)
+        };
+
         let include_set = if config.include_patterns.is_empty() {
             None
         } else {
@@ -53,33 +58,36 @@ impl FileContext {
         };
 
         // Start traversal
-        Self::traverse_directory(root_path, config, &mut files, &exclude_set, &include_set)?;
-
-        assert!(files.len() > 0);
+        Self::traverse_directory(
+            root_path,
+            Path::new(root_path),
+            config,
+            &mut files,
+            &exclude_set,
+            &include_set,
+        )?;
 
         Ok(files)
     }
 
+    /// Recursively traverse directories to find files consider glob patterns (include/exclude)
     fn traverse_directory(
-        dir_path: &str,
+        current_path_str: &str,
+        root_path: &Path,
         config: &Config,
         files: &mut Vec<FileEntry>,
-        exclude_set: &globset::GlobSet,
+        exclude_set: &Option<globset::GlobSet>,
         include_set: &Option<globset::GlobSet>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let path = Path::new(dir_path);
+        let current_path = Path::new(current_path_str);
 
-        if !path.exists() || !path.is_dir() {
+        if !current_path.exists() || !current_path.is_dir() {
             return Ok(());
         }
 
-        let entries = fs::read_dir(path)?;
-
-        // TODO: I'd certainly like this to be more 'idiomatic' Rust (avoid mut, for)
-        for entry in entries {
+        for entry in fs::read_dir(current_path)? {
             let entry = entry?;
             let entry_path = entry.path();
-            let file_name = entry_path.to_string_lossy().to_string();
 
             // Skip hidden files and directories (starting with .)
             if let Some(name) = entry_path.file_name() {
@@ -88,27 +96,49 @@ impl FileContext {
                 }
             }
 
-            // Check exclude patterns
-            if exclude_set.is_match(&file_name) {
-                continue;
+            // Compute relative path (fallback to absolute if cannot strip)
+            let rel_path: PathBuf = match entry_path.strip_prefix(root_path) {
+                Ok(p) => p.to_path_buf(),
+                Err(_) => entry_path.clone(),
+            };
+            let rel_str = rel_path.to_string_lossy();
+
+            // Exclude patterns: if any match, skip
+            if let Some(exclude) = exclude_set {
+                if exclude.is_match(rel_str.as_ref()) {
+                    continue;
+                }
             }
 
             if entry_path.is_file() {
-                // Check include patterns (if any)
+                // Include patterns: if provided and none match, skip
                 if let Some(include) = include_set {
-                    if !include.is_match(&file_name) {
+                    if !include.is_match(rel_str.as_ref()) {
                         continue;
                     }
                 }
 
-                // Create FileEntry
                 match create_file_entry(&entry_path) {
-                    Ok(file_entry) => files.push(file_entry),
-                    Err(e) => eprintln!("Warning: Could not process file {}: {}", file_name, e),
+                    Ok(mut file_entry) => {
+                        // Store relative path for consistency
+                        file_entry.path = rel_str.to_string();
+                        files.push(file_entry)
+                    }
+                    Err(e) => eprintln!(
+                        "Warning: Could not process file {}: {}",
+                        entry_path.to_string_lossy(),
+                        e
+                    ),
                 }
             } else if entry_path.is_dir() && config.is_recursive {
-                // Recursively traverse subdirectories
-                Self::traverse_directory(&file_name, config, files, exclude_set, include_set)?;
+                Self::traverse_directory(
+                    &entry_path.to_string_lossy(),
+                    root_path,
+                    config,
+                    files,
+                    exclude_set,
+                    include_set,
+                )?;
             }
         }
 

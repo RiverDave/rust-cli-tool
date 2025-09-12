@@ -61,6 +61,40 @@ cargo build --release
 | [ptree](https://crates.io/crates/ptree) | Tree visualization |
 | [chrono](https://crates.io/crates/chrono) | Date/time handling |
 
+## Pattern Matching Semantics
+
+The tool uses `globset` to match patterns against file paths relative to the root you pass.
+
+Rules:
+
+1. Hidden files/directories (starting with `.`) are skipped automatically.
+2. Exclude patterns: if any pattern matches a relative path, that file (or directory contents) is skipped.
+3. Include patterns: if provided, only files matching at least one include pattern are kept (after exclusion filtering).
+4. If no include patterns are supplied, all non-excluded, non-hidden files are considered.
+5. Patterns follow standard glob rules: `**` matches across directory boundaries.
+
+Examples:
+
+```bash
+# Include only Rust and Markdown sources
+./cli-rust . --include 'src/**/*.rs' '**/*.md'
+
+# Exclude build artifacts and logs
+./cli-rust . --exclude 'target/**' '**/*.log'
+
+# Combine include + exclude
+./cli-rust . --include 'src/**/*.rs' --exclude 'src/generated/**'
+```
+
+Gotchas:
+
+- To exclude an entire directory tree, prefer `dir/**` (not just `dir/*`).
+- Include patterns are ANDed via OR logic: any match keeps the file.
+- Exclude wins over include (a file matching both is excluded).
+- Binary detection is heuristic (null byte scan of first 512 bytes) and such files have no inlined content.
+
+If patterns don’t behave as expected, run with no patterns first to view relative paths, then refine patterns.
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file.
