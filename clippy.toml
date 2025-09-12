@@ -1,0 +1,4 @@
+# Simple clippy configuration
+allow = [
+    "too_many_arguments",  # CLI tools often have many arguments
+]

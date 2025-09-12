@@ -14,8 +14,9 @@
 //===----------------------------------------------------------------------===//
 //
 
-use crate::{Cli, Config, ContextManager, FileEntry};
+use crate::{Config, FileEntry};
 
+#[allow(unused_variables)]
 pub fn generate_output(
     files: Vec<FileEntry>,
     config: &Config,

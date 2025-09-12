@@ -95,6 +95,48 @@ Gotchas:
 
 If patterns don’t behave as expected, run with no patterns first to view relative paths, then refine patterns.
 
+## Development
+
+### CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment:
+
+- **Automated testing** on multiple Rust versions (stable, beta, nightly)
+- **Cross-platform builds** for Linux, Windows, and macOS
+- **Code quality checks** with rustfmt and clippy
+- **Security auditing** with cargo audit
+- **Automated releases** when version tags are pushed
+- **Dependency updates** via Dependabot
+
+See [CI/CD Documentation](docs/CI_CD.md) for detailed information.
+
+### Local Development
+
+```bash
+# Install dependencies
+cargo build
+
+# Run tests
+cargo test
+
+# Format code
+cargo fmt
+
+# Run lints
+cargo clippy
+
+# Build release binary
+cargo build --release
+```
+
+Or use the provided Makefile:
+
+```bash
+make help    # Show all available commands
+make check   # Run all checks
+make all     # Run all checks and build
+```
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file.

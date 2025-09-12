@@ -151,7 +151,7 @@ fn build_globset(patterns: &[String]) -> Result<globset::GlobSet, Box<dyn std::e
 
     for pattern in patterns {
         let glob = Glob::new(pattern)?;
-        builder.add(glob);
+        _ = builder.add(glob);
     }
 
     Ok(builder.build()?)
