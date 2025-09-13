@@ -14,6 +14,8 @@
 //===----------------------------------------------------------------------===//
 //
 
+use std::io::Write;
+
 use crate::git;
 use crate::types::*;
 use git2::Repository;
@@ -55,19 +57,31 @@ impl ContextManager {
 
     /// Generate output based on the built context (This is to be replaced with proper output handling)
     /// Pretty printing perhaps?
-    #[deprecated(
-        note = "This is a placeholder method and will be replaced with proper output handling."
-    )]
-    pub fn generate_output(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.context
+    pub fn generate_output(&self, config: Config) -> Result<(), Box<dyn std::error::Error>> {
+        // Get the files from the context
+        // (This looks horrible, might need to refactor)
+        let files = self
+            .context
             .as_ref()
-            .unwrap()
-            .file_ctx
-            .file_entries
-            .iter()
-            .for_each(|f| {
-                println!("Discovered File: {:?}", f.path);
+            .map(|ctx| &ctx.file_ctx.file_entries)
+            .into_iter()
+            .flatten();
+
+        // If an output file is provided, write to it
+        if let Some(output_file) = &config.output_file {
+            let mut file_buffer = std::fs::File::create(output_file).unwrap_or_else(|err| {
+                eprintln!("Error creating output file: {}", err);
+                std::process::exit(1);
             });
+            for file in files {
+                _ = writeln!(file_buffer, "File Discovered: {}", file.path);
+            }
+        } else {
+            // Otherwise, print to stdout
+            for file in files {
+                println!("File Discovered: {}", file.path);
+            }
+        }
 
         Ok(())
     }

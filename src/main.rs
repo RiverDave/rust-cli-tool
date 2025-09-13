@@ -29,12 +29,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         is_recursive: cli.recursive,
     };
 
-    println!("Config: {:?}", config);
-
-    let mut manager = ContextManager::new(config);
+    let mut manager = ContextManager::new(config.clone());
     manager.build_context()?;
 
-    manager.generate_output()?;
+    manager.generate_output(config).map_err(|err| {
+        eprintln!("Error Generating Output: {}", err);
+        err
+    })?;
 
     Ok(())
 }
