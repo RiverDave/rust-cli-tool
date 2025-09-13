@@ -27,6 +27,9 @@ fn setup_temp_repo() -> TempDir {
         writeln!(f, "// file {p}").unwrap();
     }
 
+    // I'm not quite sure if we want to instantiate a new repo for each test, but for now it's fine
+    // TODO: Add config to ignore git initialization
+
     // Initialize git repository
     let repo = Repository::init(dir.path()).expect("Failed to init git repository");
 
@@ -56,6 +59,9 @@ fn setup_temp_repo() -> TempDir {
             &[],
         )
         .unwrap();
+
+    // Set HEAD to point to the main branch
+    repo.set_head("refs/heads/main").unwrap();
 
     dir
 }
