@@ -123,6 +123,9 @@ impl OutputContext {
         // dump header
         output.push_str("# Repository Context \n\n");
 
+        //dump repo metadata
+        output.push_str(&dump_repo_metadata_md(context));
+
         for file in &context.file_ctx.file_entries {
             output.push_str(&format!("  {}\n\n", dump_file_entry(file)));
         }
@@ -142,5 +145,45 @@ fn dump_file_entry(file: &FileEntry) -> String {
     // TODO(0.1): All matadata would be dumped here
     output.push_str(&format!("## FILE: {}\n\n\n", file.path));
     output.push_str(file.content.as_deref().unwrap_or(""));
+    output
+}
+
+fn dump_repo_metadata_md(repo_context: &RepositoryContext) -> String {
+    let mut output = String::new();
+    // TODO(0.1): All matadata would be dumped here
+
+    output.push_str("## Repository Metadata\n\n");
+    output.push_str("### File System Location\n\n");
+    output.push_str(&format!("{}\n\n", repo_context.root_path));
+    output.push_str("### Git Information\n\n");
+    output.push_str(&dump_git_info_md(&repo_context.git_info));
+    output
+}
+
+fn dump_git_info_md(git_info: &crate::types::GitInfo) -> String {
+    let mut output = String::new();
+
+    if git_info.is_repo {
+        output.push_str(&format!(
+            "- **Commit Hash**: {}\n",
+            git_info.commit_hash.as_deref().unwrap_or("N/A")
+        ));
+        output.push_str(&format!(
+            "- **Branch**: {}\n",
+            git_info.branch.as_deref().unwrap_or("N/A")
+        ));
+        output.push_str(&format!(
+            "- **Author**: {} <{}>\n",
+            git_info.author.as_deref().unwrap_or("N/A"),
+            git_info.email.as_deref().unwrap_or("N/A")
+        ));
+        output.push_str(&format!(
+            "- **Date**: {}\n",
+            git_info.date.as_deref().unwrap_or("N/A")
+        ));
+    } else {
+        output.push_str("Couldn't retrieve Git information.\n");
+    }
+
     output
 }

@@ -44,7 +44,7 @@ impl ContextManager {
 
         // Utilize all modules to build the context
         self.context = Some(RepositoryContext {
-            root_path: repo.path().to_str().unwrap_or("").to_string(),
+            root_path: get_repo_root_path(&repo).expect("Failed to get repository root path"),
             git_info: git::extract_git_info(&repo)?,
             file_ctx: FileContext::from_root(self.config.clone(), &self.config.root_path)?,
         });
@@ -53,4 +53,11 @@ impl ContextManager {
 
         Ok(())
     }
+}
+
+/// The root path read from git2 links the .git folder. While this is useful for git operations,
+/// for our purposes we need the actual root path of the repository. So It's convenient for the user.
+fn get_repo_root_path(repo: &Repository) -> Result<String, Box<dyn std::error::Error>> {
+    let workdir = repo.workdir().ok_or("Failed to get workdir")?;
+    Ok(workdir.to_str().unwrap_or("").to_string())
 }
