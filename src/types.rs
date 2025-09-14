@@ -38,6 +38,7 @@ pub struct GitInfo {
     pub commit_hash: Option<String>,
     pub branch: Option<String>,
     pub author: Option<String>,
+    pub email: Option<String>,
     pub date: Option<String>,
 }
 

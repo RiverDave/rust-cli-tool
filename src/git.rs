@@ -32,6 +32,7 @@ pub fn extract_git_info(repo: &Repository) -> Result<GitInfo, Box<dyn std::error
     // Get author information
     let signature = commit.author();
     let author_name = signature.name().unwrap_or("Unknown").to_string();
+    let author_name_email = signature.email().unwrap_or("Unknown").to_string();
 
     // Get commit date
     let timestamp = signature.when();
@@ -44,5 +45,6 @@ pub fn extract_git_info(repo: &Repository) -> Result<GitInfo, Box<dyn std::error
         branch: Some(branch_name),
         author: Some(author_name),
         date: Some(date_string),
+        email: Some(author_name_email),
     })
 }
