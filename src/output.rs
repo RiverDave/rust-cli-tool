@@ -16,7 +16,7 @@
 
 use std::io::Write;
 
-use crate::{ContextManager, FileEntry, RepositoryContext};
+use crate::{ContextManager, FileContext, FileEntry, RepositoryContext};
 
 /// Simple output format options
 #[derive(Debug, Clone)]
@@ -126,9 +126,16 @@ impl OutputContext {
         //dump repo metadata
         output.push_str(&dump_repo_metadata_md(context));
 
+        // dump each file entry
         for file in &context.file_ctx.file_entries {
             output.push_str(&format!("  {}\n\n", dump_file_entry(file)));
         }
+
+        output.push_str(&dump_separator_md());
+        output.push_str("## Summary\n\n");
+
+        // dump summary
+        output.push_str(&dump_file_context_summary(&context.file_ctx));
 
         output
     }
@@ -152,11 +159,12 @@ fn dump_repo_metadata_md(repo_context: &RepositoryContext) -> String {
     let mut output = String::new();
     // TODO(0.1): All matadata would be dumped here
 
-    output.push_str("## Repository Metadata\n\n");
+    output.push_str("## Metadata\n\n");
     output.push_str("### File System Location\n\n");
     output.push_str(&format!("{}\n\n", repo_context.root_path));
     output.push_str("### Git Information\n\n");
     output.push_str(&dump_git_info_md(&repo_context.git_info));
+    output.push_str(&dump_separator_md());
     output
 }
 
@@ -185,5 +193,30 @@ fn dump_git_info_md(git_info: &crate::types::GitInfo) -> String {
         output.push_str("Couldn't retrieve Git information.\n");
     }
 
+    output
+}
+
+fn dump_file_context_summary(file_context: &FileContext) -> String {
+    let mut output = String::new();
+    output.push_str(&format!(
+        "Total files indexed: {}\n",
+        file_context.file_entries.len()
+    ));
+
+    let total_size: u64 = file_context.file_entries.iter().map(|f| f.size).sum();
+    output.push_str(&format!(
+        "Total size of files: {:.2} MB\n",
+        total_size as f64 / 1_048_576.0
+    ));
+
+    let total_lines: u64 = file_context.file_entries.iter().map(|f| f.lines).sum();
+    output.push_str(&format!("Total lines across all files: {}\n", total_lines));
+
+    output
+}
+
+fn dump_separator_md() -> String {
+    let mut output = String::new();
+    output.push_str("--------------------------------------------\n\n");
     output
 }
