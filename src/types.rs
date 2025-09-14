@@ -28,13 +28,15 @@ pub struct Config {
 pub struct FileEntry {
     pub path: String,
     pub content: Option<String>, // None for binary files
-    pub size: u64,
+    pub size: u64,               // In bytes
+    pub lines: u64,              // Number of lines
     pub is_binary: bool,
 }
 
 #[derive(Debug, Clone)]
 pub struct GitInfo {
     pub is_repo: bool,
+    // FIXME: We may not need Option<> for all these fields, as we default to "unknown" or similar
     pub commit_hash: Option<String>,
     pub branch: Option<String>,
     pub author: Option<String>,

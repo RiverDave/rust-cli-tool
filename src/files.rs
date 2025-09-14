@@ -16,9 +16,18 @@
 
 use globset::{Glob, GlobSetBuilder};
 use std::fs;
+use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 
 use crate::types::{Config, FileContext, FileEntry};
+
+/// Count lines in a file efficiently without loading entire content into memory
+// NOTE: I wonder how expensive would this be?
+fn get_file_lines(path: &Path) -> Result<u64, Box<dyn std::error::Error>> {
+    let file = fs::File::open(path)?;
+    let reader = BufReader::new(file);
+    Ok(reader.lines().count() as u64)
+}
 
 impl FileContext {
     pub fn new(config: Config) -> Self {
@@ -167,15 +176,18 @@ fn create_file_entry(path: &Path) -> Result<FileEntry, Box<dyn std::error::Error
     // Read content if it's not binary and not too large (e.g., < 1MB)
     // It'd be fun if the user could configure this limit, too complex for now
     let content = if !is_binary && size < 1_000_000 {
-        fs::read_to_string(path).ok() // Treat as binary if we can't read as UTF-8
+        fs::read_to_string(path).ok()
     } else {
         None
     };
+
+    let lines = if !is_binary { get_file_lines(path)? } else { 0 };
 
     Ok(FileEntry {
         path: path.to_string_lossy().to_string(),
         content,
         size,
+        lines,
         is_binary,
     })
 }
