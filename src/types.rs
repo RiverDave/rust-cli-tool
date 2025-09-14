@@ -41,14 +41,14 @@ pub struct GitInfo {
     pub date: Option<String>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RepositoryContext {
     pub root_path: String,
     pub git_info: GitInfo,
     pub file_ctx: FileContext,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FileContext {
     pub file_entries: Vec<FileEntry>,
     pub config: Config, // pub tree: Vec<TreeEntry>, TODO

@@ -15,7 +15,7 @@
 //
 
 use clap::Parser;
-use cli_rust::{Cli, Config, ContextManager};
+use cli_rust::{Cli, Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
 
 #[allow(deprecated)]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -30,12 +30,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let mut manager = ContextManager::new(config.clone());
-    manager.build_context()?;
+    manager.build_context().unwrap_or_else(|e| {
+        eprintln!("Error building context: {}", e);
+        std::process::exit(1);
+    });
 
-    manager.generate_output(config).map_err(|err| {
-        eprintln!("Error Generating Output: {}", err);
-        err
-    })?;
+    // Parse arguments for output format and destination
+    let output_dest = match config.output_file {
+        Some(p) => OutputDestination::File(p),
+        None => OutputDestination::Stdout,
+    };
+
+    OutputContext::new(manager)
+        .format(OutputFormat::Markdown)
+        .destination(output_dest)
+        .generate()?;
 
     Ok(())
 }
