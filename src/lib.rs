@@ -30,3 +30,4 @@ pub mod types;
 // Re-export key functionality
 pub use cli::Cli;
 pub use context::ContextManager;
+pub use output::{OutputContext, OutputDestination, OutputFormat};

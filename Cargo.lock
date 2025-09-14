@@ -233,6 +233,8 @@ dependencies = [
  "globset",
  "indicatif",
  "ptree",
+ "serde",
+ "serde_json",
  "tempfile",
 ]
 

@@ -1,4 +1,4 @@
-use cli_rust::{Config, ContextManager};
+use cli_rust::{Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
 use git2::Repository;
 use std::fs::{self, File};
 use std::io::Write;
@@ -82,18 +82,21 @@ fn test_stdout_output_mode() {
 
     // This test just ensures it doesn't panic when writing to stdout
     // In a real test, you'd capture stdout, but for simplicity we just verify it runs
-    let result = manager.generate_output(config);
+    let result = OutputContext::new(manager)
+        .format(OutputFormat::Markdown)
+        .destination(OutputDestination::Stdout)
+        .generate();
     assert!(result.is_ok());
 }
 
 #[test]
 fn test_file_output_mode() {
     let dir = setup_temp_repo();
-    let output_file = dir.path().join("output.txt");
+    let output_base = dir.path().join("output"); // No extension - it will be added
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
-        output_file: Some(output_file.to_string_lossy().to_string()),
+        output_file: None, // Not used in new system
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
@@ -103,15 +106,22 @@ fn test_file_output_mode() {
     manager.build_context().unwrap();
 
     // Generate output to file
-    let result = manager.generate_output(config);
+    let result = OutputContext::new(manager)
+        .format(OutputFormat::Markdown)
+        .destination(OutputDestination::File(
+            output_base.to_string_lossy().to_string(),
+        ))
+        .generate();
     assert!(result.is_ok());
 
     // Verify file was created and contains expected content
-    assert!(output_file.exists());
-    let content = fs::read_to_string(&output_file).unwrap();
+    let expected_file = output_base.with_extension("md"); // Markdown format adds .md
+    assert!(expected_file.exists());
+    let content = fs::read_to_string(&expected_file).unwrap();
 
     // Should contain file paths
-    assert!(content.contains("File Discovered:"));
+    assert!(content.contains("Repository Context"));
+    assert!(content.contains("FILE:"));
     assert!(content.contains("src/main.rs"));
     assert!(content.contains("src/lib.rs"));
     assert!(content.contains("nested/keep.rs"));
@@ -120,14 +130,15 @@ fn test_file_output_mode() {
 #[test]
 fn test_file_output_overwrites_existing() {
     let dir = setup_temp_repo();
-    let output_file = dir.path().join("output.txt");
+    let output_base = dir.path().join("output");
+    let output_file_with_ext = output_base.with_extension("md");
 
-    // Create an existing file with different content
-    fs::write(&output_file, "old content").unwrap();
+    // Create an existing file with different content (the file that will be created)
+    fs::write(&output_file_with_ext, "old content").unwrap();
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
-        output_file: Some(output_file.to_string_lossy().to_string()),
+        output_file: None,
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
@@ -137,23 +148,28 @@ fn test_file_output_overwrites_existing() {
     manager.build_context().unwrap();
 
     // Generate output to file
-    let result = manager.generate_output(config);
+    let result = OutputContext::new(manager)
+        .format(OutputFormat::Markdown)
+        .destination(OutputDestination::File(
+            output_base.to_string_lossy().to_string(),
+        ))
+        .generate();
     assert!(result.is_ok());
 
     // Verify file was overwritten (old content should be gone)
-    let content = fs::read_to_string(&output_file).unwrap();
+    let content = fs::read_to_string(&output_file_with_ext).unwrap();
     assert!(!content.contains("old content"));
-    assert!(content.contains("File Discovered:"));
+    assert!(content.contains("Repository Context"));
 }
 
 #[test]
 fn test_output_with_include_exclude_patterns() {
     let dir = setup_temp_repo();
-    let output_file = dir.path().join("filtered_output.txt");
+    let output_base = dir.path().join("filtered_output");
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
-        output_file: Some(output_file.to_string_lossy().to_string()),
+        output_file: None,
         include_patterns: vec!["src/**/*.rs".into()],
         exclude_patterns: vec!["**/*.log".into()],
         is_recursive: true,
@@ -162,10 +178,16 @@ fn test_output_with_include_exclude_patterns() {
     let mut manager = ContextManager::new(config.clone());
     manager.build_context().unwrap();
 
-    let result = manager.generate_output(config);
+    let result = OutputContext::new(manager)
+        .format(OutputFormat::Markdown)
+        .destination(OutputDestination::File(
+            output_base.to_string_lossy().to_string(),
+        ))
+        .generate();
     assert!(result.is_ok());
 
-    let content = fs::read_to_string(&output_file).unwrap();
+    let expected_file = output_base.with_extension("md");
+    let content = fs::read_to_string(&expected_file).unwrap();
 
     // Should include Rust files from src
     assert!(content.contains("src/main.rs"));
@@ -204,11 +226,11 @@ fn test_output_file_creation_error() {
 #[test]
 fn test_empty_context_output() {
     let dir = setup_temp_repo();
-    let output_file = dir.path().join("empty_output.txt");
+    let output_base = dir.path().join("empty_output");
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
-        output_file: Some(output_file.to_string_lossy().to_string()),
+        output_file: None,
         include_patterns: vec!["**/*.nonexistent".into()], // No files will match
         exclude_patterns: vec![],
         is_recursive: true,
@@ -217,22 +239,30 @@ fn test_empty_context_output() {
     let mut manager = ContextManager::new(config.clone());
     manager.build_context().unwrap();
 
-    let result = manager.generate_output(config);
+    let result = OutputContext::new(manager)
+        .format(OutputFormat::Markdown)
+        .destination(OutputDestination::File(
+            output_base.to_string_lossy().to_string(),
+        ))
+        .generate();
     assert!(result.is_ok());
 
     // File should be created but empty (except for newlines)
-    let content = fs::read_to_string(&output_file).unwrap();
-    assert!(content.is_empty() || content.trim().is_empty());
+    let expected_file = output_base.with_extension("md");
+    let content = fs::read_to_string(&expected_file).unwrap();
+
+    // Should have header but no file entries
+    assert!(content.contains("Repository Context"));
 }
 
 #[test]
 fn test_output_consistency_between_modes() {
     let dir = setup_temp_repo();
-    let output_file = dir.path().join("file_output.txt");
+    let output_base = dir.path().join("file_output");
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
-        output_file: Some(output_file.to_string_lossy().to_string()),
+        output_file: None,
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
@@ -242,8 +272,16 @@ fn test_output_consistency_between_modes() {
     manager.build_context().unwrap();
 
     // Generate output to file
-    manager.generate_output(config.clone()).unwrap();
-    let file_content = fs::read_to_string(&output_file).unwrap();
+    OutputContext::new(manager)
+        .format(OutputFormat::Markdown)
+        .destination(OutputDestination::File(
+            output_base.to_string_lossy().to_string(),
+        ))
+        .generate()
+        .unwrap();
+
+    let expected_file = output_base.with_extension("md");
+    let file_content = fs::read_to_string(&expected_file).unwrap();
 
     // Now test stdout mode with same config
     let stdout_config = Config {
@@ -251,16 +289,18 @@ fn test_output_consistency_between_modes() {
         ..config
     };
 
+    // Create a new manager for stdout test
+    let mut stdout_manager = ContextManager::new(stdout_config);
+    stdout_manager.build_context().unwrap();
+
     // We can't easily capture stdout in tests, so we just verify it runs without error
-    let result = manager.generate_output(stdout_config);
+    let result = OutputContext::new(stdout_manager)
+        .format(OutputFormat::Markdown)
+        .destination(OutputDestination::Stdout)
+        .generate();
     assert!(result.is_ok());
 
     // Verify file content has expected structure
-    let lines: Vec<&str> = file_content.lines().collect();
-    assert!(!lines.is_empty());
-    assert!(
-        lines
-            .iter()
-            .all(|line| line.starts_with("File Discovered: "))
-    );
+    assert!(file_content.contains("Repository Context"));
+    assert!(file_content.contains("FILE:"));
 }
