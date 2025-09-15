@@ -149,9 +149,22 @@ impl OutputContext {
 
 fn dump_file_entry(file: &FileEntry) -> String {
     let mut output = String::new();
-    // TODO(0.1): All matadata would be dumped here
-    output.push_str(&format!("## FILE: {}\n\n\n", file.path));
-    output.push_str(file.content.as_deref().unwrap_or(""));
+    output.push_str(&format!("## FILE: {}\n\n", file.path));
+
+    if let Some(content) = &file.content {
+        let language = get_file_extension(&file.path);
+        output.push_str(&format!("```{}\n", language));
+        output.push_str(content);
+        if !content.ends_with('\n') {
+            output.push('\n');
+        }
+        output.push_str("```\n");
+    } else if file.is_binary {
+        output.push_str("*Binary file - content not displayed*\n");
+    } else {
+        output.push_str("*Content not available*\n");
+    }
+
     output
 }
 
@@ -219,4 +232,14 @@ fn dump_separator_md() -> String {
     let mut output = String::new();
     output.push_str("--------------------------------------------\n\n");
     output
+}
+
+/// Detect programming language from file path/extension
+fn get_file_extension(file_path: &str) -> &str {
+    // Get file extension efficiently
+    if let Some(dot_pos) = file_path.rfind('.') {
+        &file_path[dot_pos + 1..]
+    } else {
+        ""
+    }
 }
