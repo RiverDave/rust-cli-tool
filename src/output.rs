@@ -126,6 +126,9 @@ impl OutputContext {
         //dump repo metadata
         output.push_str(&dump_repo_metadata_md(context));
 
+        // dump tree structure
+        output.push_str(&dump_tree_structure(&self.context_manager));
+
         // dump each file entry
         for file in &context.file_ctx.file_entries {
             output.push_str(&format!("  {}\n\n", dump_file_entry(file)));
@@ -242,4 +245,27 @@ fn get_file_extension(file_path: &str) -> &str {
     } else {
         ""
     }
+}
+
+fn dump_tree_structure(ctx_manager: &ContextManager) -> String {
+    let mut output = String::new();
+
+    let tree_str = get_tree_structure(ctx_manager);
+
+    // dump tree structure
+    if !tree_str.is_empty() {
+        output.push_str("## Directory Structure\n\n");
+        output.push_str("```\n");
+        output.push_str(&tree_str);
+        output.push_str("```\n\n");
+    }
+
+    output.push_str(&dump_separator_md());
+    output
+}
+
+fn get_tree_structure(ctx_manager: &ContextManager) -> String {
+    // Cloning could be very expensive for large trees
+    // We'll afford it for now, but consider refactoring later
+    ctx_manager.context.as_ref().unwrap().tree_repr.clone()
 }
