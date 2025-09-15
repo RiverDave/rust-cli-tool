@@ -148,6 +148,7 @@ mod output_context_tests {
         let dir = setup_temp_repo();
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
@@ -166,6 +167,7 @@ mod output_context_tests {
         let dir = setup_temp_repo();
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
@@ -189,6 +191,7 @@ mod output_context_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
@@ -224,6 +227,7 @@ mod output_context_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["README.md".into()],
             exclude_patterns: vec![],
@@ -253,6 +257,7 @@ mod output_context_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
@@ -302,6 +307,7 @@ mod output_context_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["Cargo.toml".into()],
             exclude_patterns: vec![],
@@ -328,6 +334,7 @@ mod output_context_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["src/**/*.rs".into()],
             exclude_patterns: vec!["**/*lib*".into()],
@@ -363,6 +370,7 @@ mod output_context_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["**/*.nonexistent".into()], // No files match
             exclude_patterns: vec![],
@@ -402,6 +410,7 @@ mod output_context_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
@@ -434,6 +443,7 @@ mod integration_tests {
         // Test the complete workflow from config to output
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["**/*.md".into(), "**/*.rs".into()],
             exclude_patterns: vec!["docs/**".into()],
@@ -478,6 +488,7 @@ mod integration_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["Cargo.toml".into()],
             exclude_patterns: vec![],
@@ -513,6 +524,7 @@ mod integration_tests {
 
         let config = Config {
             root_path: dir.path().to_string_lossy().to_string(),
+            target_paths: vec![], // Empty for this test, will use from_root
             output_file: None,
             include_patterns: vec!["README.md".into()],
             exclude_patterns: vec![],

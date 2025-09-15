@@ -32,6 +32,7 @@ fn test_line_counting() {
 
     let config = Config {
         root_path: temp_dir.path().to_string_lossy().to_string(),
+        target_paths: vec![], // Empty for this test, will use from_root
         output_file: None,
         include_patterns: vec![],
         exclude_patterns: vec![],

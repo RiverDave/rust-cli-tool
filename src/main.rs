@@ -21,8 +21,17 @@ use cli_rust::{Cli, Config, ContextManager, OutputContext, OutputDestination, Ou
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
+    // Discover repo root from current working directory
+    let current_dir =
+        std::env::current_dir().map_err(|e| format!("Failed to get current directory: {}", e))?;
+    let root_path = current_dir
+        .to_str()
+        .ok_or("Failed to convert current directory to string")?
+        .to_string();
+
     let config = Config {
-        root_path: cli.repo_path,
+        root_path,
+        target_paths: cli.target_paths,
         output_file: cli.output,
         include_patterns: cli.include.unwrap_or_default(),
         exclude_patterns: cli.exclude.unwrap_or_default(),

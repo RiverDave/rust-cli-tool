@@ -20,9 +20,9 @@ use clap::Parser;
 #[command(about = "Package repository context for LLMs")]
 /// Main CLI structure for the application.
 pub struct Cli {
-    /// Repository root path
-    #[arg(help = "Repository root path (only one path allowed)")]
-    pub repo_path: String,
+    /// Target paths/files to process (required)
+    #[arg(help = "Files or directories to process", required = true)]
+    pub target_paths: Vec<String>,
 
     /// Toggle Recursive file traversal
     #[arg(short, long, default_value_t = true)] // NOTE: Haven't tested this yet

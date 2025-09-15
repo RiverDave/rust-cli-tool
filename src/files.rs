@@ -46,6 +46,56 @@ impl FileContext {
         })
     }
 
+    /// Create a new FileContext with files discovered from specific target paths
+    pub fn from_target_paths(
+        config: Config,
+        repo_root: &str,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let mut all_files = Vec::new();
+
+        for target_path in &config.target_paths {
+            // Convert target path to absolute path if it's relative
+            let abs_target_path = if Path::new(target_path).is_absolute() {
+                target_path.clone()
+            } else {
+                // Resolve relative to current working directory (config.root_path)
+                Path::new(&config.root_path)
+                    .join(target_path)
+                    .to_string_lossy()
+                    .to_string()
+            };
+
+            let target_path_obj = Path::new(&abs_target_path);
+
+            if target_path_obj.is_file() {
+                // Single file - create file entry directly
+                match create_file_entry(target_path_obj) {
+                    Ok(mut file_entry) => {
+                        // Make path relative to repo root for consistency
+                        if let Ok(rel_path) = target_path_obj.strip_prefix(repo_root) {
+                            file_entry.path = rel_path.to_string_lossy().to_string();
+                        }
+                        all_files.push(file_entry);
+                    }
+                    Err(e) => {
+                        eprintln!("Warning: Could not process file {}: {}", abs_target_path, e)
+                    }
+                }
+            } else if target_path_obj.is_dir() {
+                // Directory - discover files within it
+                let files = Self::discover_files(&abs_target_path, &config)?;
+                all_files.extend(files);
+            } else {
+                eprintln!("Warning: Target path does not exist: {}", abs_target_path);
+            }
+        }
+
+        Ok(Self {
+            file_entries: all_files,
+            config,
+        })
+    }
+
     /// Discover files in the given root path
     pub fn discover_files(
         root_path: &str,

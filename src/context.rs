@@ -35,18 +35,37 @@ impl ContextManager {
     /// This is the heart of our implementation.
     /// Build the repository context by gathering information from git and the filesystem.
     /// This function initializes the context and populates it with relevant data.
+    /// Now discovers repo from current working directory and processes specific target paths.
     pub fn build_context(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        // We need to initiate the interaction with libgit2 in the root path
-        let repo: Repository = match Repository::open(&self.config.root_path) {
+        // Discover git repository from the current working directory (root_path)
+        let repo: Repository = match Repository::discover(&self.config.root_path) {
             Ok(repo) => repo,
-            Err(e) => return Err(format!("Failed to open repository: {}", e).into()),
+            Err(e) => {
+                return Err(format!(
+                    "Failed to discover repository from {}: {}",
+                    self.config.root_path, e
+                )
+                .into());
+            }
+        };
+
+        // Get the actual repository root path
+        let actual_repo_root = get_repo_root_path(&repo)?;
+
+        // Build file context with target paths (for CLI) or from root (for tests/empty paths)
+        let file_ctx = if self.config.target_paths.is_empty() {
+            // If no target paths specified, process the entire repo (for tests and compatibility)
+            FileContext::from_root(self.config.clone(), &actual_repo_root)?
+        } else {
+            // Process only the specified target paths (new CLI behavior)
+            FileContext::from_target_paths(self.config.clone(), &actual_repo_root)?
         };
 
         // Utilize all modules to build the context
         self.context = Some(RepositoryContext {
-            root_path: get_repo_root_path(&repo).expect("Failed to get repository root path"),
+            root_path: actual_repo_root,
             git_info: git::extract_git_info(&repo)?,
-            file_ctx: FileContext::from_root(self.config.clone(), &self.config.root_path)?,
+            file_ctx,
         });
 
         assert!(self.context.is_some());
