@@ -71,7 +71,8 @@ fn test_stdout_output_mode() {
     let dir = setup_temp_repo();
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
-        output_file: None, // No output file = stdout
+        target_paths: vec![], // Empty for this test, will use from_root
+        output_file: None,    // No output file = stdout
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
@@ -96,7 +97,8 @@ fn test_file_output_mode() {
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
-        output_file: None, // Not used in new system
+        target_paths: vec![], // Empty for this test, will use from_root
+        output_file: None,    // Not used in new system
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
@@ -138,6 +140,7 @@ fn test_file_output_overwrites_existing() {
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
+        target_paths: vec![], // Empty for this test, will use from_root
         output_file: None,
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
@@ -169,6 +172,7 @@ fn test_output_with_include_exclude_patterns() {
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
+        target_paths: vec![], // Empty for this test, will use from_root
         output_file: None,
         include_patterns: vec!["src/**/*.rs".into()],
         exclude_patterns: vec!["**/*.log".into()],
@@ -209,6 +213,7 @@ fn test_output_file_creation_error() {
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
+        target_paths: vec![], // Empty for this test, will use from_root
         output_file: Some(output_file.to_string_lossy().to_string()),
         include_patterns: vec![],
         exclude_patterns: vec![],
@@ -230,6 +235,7 @@ fn test_empty_context_output() {
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
+        target_paths: vec![], // Empty for this test, will use from_root
         output_file: None,
         include_patterns: vec!["**/*.nonexistent".into()], // No files will match
         exclude_patterns: vec![],
@@ -262,6 +268,7 @@ fn test_output_consistency_between_modes() {
 
     let config = Config {
         root_path: dir.path().to_string_lossy().to_string(),
+        target_paths: vec![], // Empty for this test, will use from_root
         output_file: None,
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],

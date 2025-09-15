@@ -16,8 +16,10 @@
 
 #[derive(Debug, Clone)]
 pub struct Config {
-    // will only support the original repo path
+    // Repo root path - now discovered from current working directory
     pub root_path: String,
+    // Target paths/files to process
+    pub target_paths: Vec<String>,
     pub output_file: Option<String>,
     pub include_patterns: Vec<String>,
     pub exclude_patterns: Vec<String>,
