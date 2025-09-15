@@ -14,6 +14,7 @@
 //===----------------------------------------------------------------------===//
 //
 
+use crate::TreeContext;
 use crate::git;
 use crate::types::*;
 use git2::Repository;
@@ -62,10 +63,20 @@ impl ContextManager {
         };
 
         // Utilize all modules to build the context
+        // Build tree from the discovered files (rooted at repo root)
+
+        let mut tree_ctx = TreeContext::new(self.config.clone());
+        let tree_repr = if self.config.target_paths.is_empty() {
+            tree_ctx.build_tree_from_root()?.tree_str.clone()
+        } else {
+            tree_ctx.build_tree_from_targets()?.tree_str.clone()
+        };
+
         self.context = Some(RepositoryContext {
             root_path: actual_repo_root,
             git_info: git::extract_git_info(&repo)?,
             file_ctx,
+            tree_repr,
         });
 
         assert!(self.context.is_some());

@@ -31,3 +31,4 @@ pub mod types;
 pub use cli::Cli;
 pub use context::ContextManager;
 pub use output::{OutputContext, OutputDestination, OutputFormat};
+pub use tree::TreeContext;

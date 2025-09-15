@@ -51,6 +51,8 @@ pub struct RepositoryContext {
     pub root_path: String,
     pub git_info: GitInfo,
     pub file_ctx: FileContext,
+    // Stores the tree representation as a string for easy output
+    pub tree_repr: String,
 }
 
 #[derive(Debug, Clone)]
