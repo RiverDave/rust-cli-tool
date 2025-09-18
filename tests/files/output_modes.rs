@@ -76,6 +76,7 @@ fn test_stdout_output_mode() {
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let mut manager = ContextManager::new(config.clone());
@@ -102,6 +103,7 @@ fn test_file_output_mode() {
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let mut manager = ContextManager::new(config.clone());
@@ -145,6 +147,7 @@ fn test_file_output_overwrites_existing() {
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let mut manager = ContextManager::new(config.clone());
@@ -177,6 +180,7 @@ fn test_output_with_include_exclude_patterns() {
         include_patterns: vec!["src/**/*.rs".into()],
         exclude_patterns: vec!["**/*.log".into()],
         is_recursive: true,
+        recent_only: false,
     };
 
     let mut manager = ContextManager::new(config.clone());
@@ -218,6 +222,7 @@ fn test_output_file_creation_error() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let mut manager = ContextManager::new(config.clone());
@@ -240,6 +245,7 @@ fn test_empty_context_output() {
         include_patterns: vec!["**/*.nonexistent".into()], // No files will match
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let mut manager = ContextManager::new(config.clone());
@@ -273,6 +279,7 @@ fn test_output_consistency_between_modes() {
         include_patterns: vec!["**/*.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let mut manager = ContextManager::new(config.clone());

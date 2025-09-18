@@ -18,6 +18,7 @@ use globset::{Glob, GlobSetBuilder};
 use std::fs;
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
+use std::time::{Duration, SystemTime};
 
 use crate::types::{Config, FileContext, FileEntry};
 
@@ -27,6 +28,16 @@ fn get_file_lines(path: &Path) -> Result<u64, Box<dyn std::error::Error>> {
     let file = fs::File::open(path)?;
     let reader = BufReader::new(file);
     Ok(reader.lines().count() as u64)
+}
+
+/// Check if a file was modified within the last 7 days
+fn is_recently_modified(path: &Path) -> Result<bool, Box<dyn std::error::Error>> {
+    let metadata = fs::metadata(path)?;
+    let modified_time = metadata.modified()?;
+    let now = SystemTime::now();
+    let seven_days_ago = now - Duration::from_secs(7 * 24 * 60 * 60);
+
+    Ok(modified_time >= seven_days_ago)
 }
 
 impl FileContext {
@@ -68,6 +79,22 @@ impl FileContext {
             let target_path_obj = Path::new(&abs_target_path);
 
             if target_path_obj.is_file() {
+                // Single file - check recent filter if enabled
+                if config.recent_only {
+                    match is_recently_modified(target_path_obj) {
+                        Ok(false) => continue, // File is not recent, skip
+                        Err(e) => {
+                            eprintln!(
+                                "Warning: Could not check modification time for {}: {}",
+                                abs_target_path,
+                                e
+                            );
+                            continue;
+                        }
+                        Ok(true) => {} // File is recent, continue processing
+                    }
+                }
+
                 // Single file - create file entry directly
                 match create_file_entry(target_path_obj) {
                     Ok(mut file_entry) => {
@@ -175,6 +202,22 @@ impl FileContext {
                     && !include.is_match(rel_str.as_ref())
                 {
                     continue;
+                }
+
+                // Recent filter: if enabled and file is not recently modified, skip
+                if config.recent_only {
+                    match is_recently_modified(&entry_path) {
+                        Ok(false) => continue,
+                        Err(e) => {
+                            eprintln!(
+                                "Warning: Could not check modification time for {}: {}",
+                                entry_path.to_string_lossy(),
+                                e
+                            );
+                            continue;
+                        }
+                        Ok(true) => {} // File is recent, continue processing
+                    }
                 }
 
                 match create_file_entry(&entry_path) {

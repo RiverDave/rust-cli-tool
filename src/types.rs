@@ -24,6 +24,7 @@ pub struct Config {
     pub include_patterns: Vec<String>,
     pub exclude_patterns: Vec<String>,
     pub is_recursive: bool,
+    pub recent_only: bool,
 }
 
 #[derive(Debug, Clone)]
