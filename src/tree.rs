@@ -18,6 +18,18 @@ use crate::Config;
 use globset::{Glob, GlobSetBuilder};
 use ptree::TreeBuilder;
 use std::path::{Path, PathBuf};
+use std::time::{Duration, SystemTime};
+use std::fs;
+
+/// Check if a file was modified within the last 7 days
+fn is_recently_modified(path: &Path) -> Result<bool, Box<dyn std::error::Error>> {
+    let metadata = fs::metadata(path)?;
+    let modified_time = metadata.modified()?;
+    let now = SystemTime::now();
+    let seven_days_ago = now - Duration::from_secs(7 * 24 * 60 * 60);
+
+    Ok(modified_time >= seven_days_ago)
+}
 
 #[derive(Debug, Clone)]
 pub struct TreeContext {
@@ -235,7 +247,7 @@ impl TreeContext {
             return Ok(());
         }
 
-        let mut entries = std::fs::read_dir(current_path)?
+        let mut entries = fs::read_dir(current_path)?
             .filter_map(|entry| entry.ok())
             .collect::<Vec<_>>();
 
@@ -271,6 +283,15 @@ impl TreeContext {
                 }
                 _ = tree_builder.end_child();
             } else if is_file {
+                // Check recent filter if enabled
+                if self.config.recent_only {
+                    match is_recently_modified(&entry_path) {
+                        Ok(false) => continue, // File is not recent, skip
+                        Err(_) => continue,    // Error checking modification time, skip
+                        Ok(true) => {}         // File is recent, continue processing
+                    }
+                }
+
                 // Only add files that passed the include filter
                 _ = tree_builder.add_empty_child(name);
             }
@@ -293,7 +314,7 @@ impl TreeContext {
             return Ok(());
         }
 
-        let mut entries = std::fs::read_dir(current_path)?
+        let mut entries = fs::read_dir(current_path)?
             .filter_map(|entry| entry.ok())
             .filter(|entry| {
                 if let Ok(canonical_path) = entry.path().canonicalize() {
@@ -331,6 +352,15 @@ impl TreeContext {
                 )?;
                 _ = tree_builder.end_child();
             } else {
+                // Check recent filter if enabled
+                if self.config.recent_only {
+                    match is_recently_modified(&entry_path) {
+                        Ok(false) => continue, // File is not recent, skip
+                        Err(_) => continue,    // Error checking modification time, skip
+                        Ok(true) => {}         // File is recent, continue processing
+                    }
+                }
+
                 _ = tree_builder.add_empty_child(name);
             }
         }
