@@ -9,6 +9,7 @@ A simple Rust CLI tool that packages your codebase for LLMs. It scans directorie
 - 📝 Extracts text file contents (skips binary files)
 - 🔄 Git repository information
 - 🎯 Glob pattern filtering
+- ⏰ Recent files filtering (last 7 days)
 
 ## Installation
 
@@ -42,6 +43,9 @@ cargo build --release
 
 # Save to file
 ./cli-rust . -o output.txt
+
+# Only include files modified in the last 7 days
+./cli-rust . --recent
 ```
 
 ## Command Options
@@ -52,6 +56,7 @@ cargo build --release
 | `-e, --exclude` | Exclude file patterns (e.g., "target/*") |
 | `-o, --output` | Save to file instead of stdout |
 | `-r, --recursive` | Recursive scanning (default: true) |
+| `--recent` | Only include files modified within the last 7 days |
 
 ## Dependencies
 
@@ -86,6 +91,12 @@ Examples:
 
 # Combine include + exclude
 ./cli-rust . --include 'src/**/*.rs' --exclude 'src/generated/**'
+
+# Only recent files (last 7 days)
+./cli-rust . --recent
+
+# Combine recent with include patterns
+./cli-rust . --recent --include 'src/**/*.rs' --output recent_changes
 ```
 
 Gotchas:
