@@ -30,7 +30,7 @@ fn get_file_lines(path: &Path) -> Result<u64, Box<dyn std::error::Error>> {
     Ok(reader.lines().count() as u64)
 }
 
-/// Check if a file was modified within the last 7 days
+/// Filter fn: Check if a file was modified within the last 7 days
 fn is_recently_modified(path: &Path) -> Result<bool, Box<dyn std::error::Error>> {
     let metadata = fs::metadata(path)?;
     let modified_time = metadata.modified()?;
