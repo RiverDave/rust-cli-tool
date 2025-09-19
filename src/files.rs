@@ -86,8 +86,7 @@ impl FileContext {
                         Err(e) => {
                             eprintln!(
                                 "Warning: Could not check modification time for {}: {}",
-                                abs_target_path,
-                                e
+                                abs_target_path, e
                             );
                             continue;
                         }

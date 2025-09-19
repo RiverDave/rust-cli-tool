@@ -17,9 +17,9 @@
 use crate::Config;
 use globset::{Glob, GlobSetBuilder};
 use ptree::TreeBuilder;
+use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
-use std::fs;
 
 /// Check if a file was modified within the last 7 days
 fn is_recently_modified(path: &Path) -> Result<bool, Box<dyn std::error::Error>> {
