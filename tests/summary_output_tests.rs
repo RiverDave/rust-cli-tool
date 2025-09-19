@@ -34,6 +34,7 @@ fn test_summary_calculation() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())

@@ -42,6 +42,7 @@ fn test_single_line_file() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -67,6 +68,7 @@ fn test_multi_line_file() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -90,6 +92,7 @@ fn test_empty_file() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -114,6 +117,7 @@ fn test_file_without_trailing_newline() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -137,6 +141,7 @@ fn test_binary_file_line_count() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -166,6 +171,7 @@ fn test_multiple_files_line_counting() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -205,6 +211,7 @@ fn test_file_with_only_newlines() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -238,6 +245,7 @@ fn test_recursive_directory_line_counting() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())
@@ -266,6 +274,7 @@ fn test_summary_generation() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        recent_only: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())

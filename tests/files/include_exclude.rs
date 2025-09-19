@@ -37,6 +37,7 @@ fn exclude_glob_filters_out_matches() {
         include_patterns: vec![],
         exclude_patterns: vec!["**/*.log".into(), "**/*.bin".into()],
         is_recursive: true,
+        recent_only: false,
     };
 
     let file_ctx = FileContext::from_root(config.clone(), &config.root_path).unwrap();
@@ -61,6 +62,7 @@ fn include_glob_only_includes_matches() {
         include_patterns: vec!["src/**/*.rs".into(), "nested/keep.rs".into()],
         exclude_patterns: vec![],
         is_recursive: true,
+        recent_only: false,
     };
 
     let file_ctx = FileContext::from_root(config.clone(), &config.root_path).unwrap();
@@ -87,6 +89,7 @@ fn include_and_exclude_combined() {
         include_patterns: vec!["**/*.rs".into(), "**/*.md".into()],
         exclude_patterns: vec!["nested/*".into()],
         is_recursive: true,
+        recent_only: false,
     };
 
     let file_ctx = FileContext::from_root(config.clone(), &config.root_path).unwrap();

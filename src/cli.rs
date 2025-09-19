@@ -39,4 +39,8 @@ pub struct Cli {
     /// Include dir/file patterns
     #[arg(short = 'i', long = "include")]
     pub include: Option<Vec<String>>,
+
+    /// Only include files modified within the last 7 days
+    #[arg(long = "recent")]
+    pub recent: bool,
 }

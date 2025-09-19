@@ -153,6 +153,7 @@ mod output_context_tests {
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -172,6 +173,7 @@ mod output_context_tests {
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -196,6 +198,7 @@ mod output_context_tests {
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -232,6 +235,7 @@ mod output_context_tests {
             include_patterns: vec!["README.md".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -262,6 +266,7 @@ mod output_context_tests {
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -312,6 +317,7 @@ mod output_context_tests {
             include_patterns: vec!["Cargo.toml".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -339,6 +345,7 @@ mod output_context_tests {
             include_patterns: vec!["src/**/*.rs".into()],
             exclude_patterns: vec!["**/*lib*".into()],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -375,6 +382,7 @@ mod output_context_tests {
             include_patterns: vec!["**/*.nonexistent".into()], // No files match
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -415,6 +423,7 @@ mod output_context_tests {
             include_patterns: vec!["**/*.rs".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -448,6 +457,7 @@ mod integration_tests {
             include_patterns: vec!["**/*.md".into(), "**/*.rs".into()],
             exclude_patterns: vec!["docs/**".into()],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -493,6 +503,7 @@ mod integration_tests {
             include_patterns: vec!["Cargo.toml".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         // We need separate managers since generate() consumes the context
@@ -529,6 +540,7 @@ mod integration_tests {
             include_patterns: vec!["README.md".into()],
             exclude_patterns: vec![],
             is_recursive: true,
+            recent_only: false,
         };
 
         let mut manager = ContextManager::new(config);
