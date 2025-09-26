@@ -39,4 +39,8 @@ pub struct Cli {
     /// Include dir/file patterns
     #[arg(short = 'i', long = "include")]
     pub include: Option<Vec<String>>,
+
+    /// Show line numbers in file content output
+    #[arg(short = 'l', long = "line-numbers")]
+    pub line_numbers: bool,
 }

@@ -49,6 +49,7 @@ fn test_build_tree_from_root_basic() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -76,6 +77,7 @@ fn test_build_tree_from_root_with_exclude_patterns() {
         exclude_patterns: vec!["*.toml".to_string(), "tests/**".to_string()],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -103,6 +105,7 @@ fn test_build_tree_from_root_with_include_patterns() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -130,6 +133,7 @@ fn test_build_tree_from_targets_with_specific_files() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -158,6 +162,7 @@ fn test_build_tree_from_targets_with_directory() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -188,6 +193,7 @@ fn test_build_tree_from_targets_root_directory_detection() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -218,6 +224,7 @@ fn test_build_tree_from_targets_with_absolute_path() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -243,6 +250,7 @@ fn test_empty_target_paths_falls_back_to_full_tree() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -265,6 +273,7 @@ fn test_tree_context_new() {
         exclude_patterns: vec!["target/".to_string()],
         is_recursive: true,
         output_file: Some("output.md".to_string()),
+        show_line_numbers: false,
     };
 
     let tree_context = TreeContext::new(config.clone());
@@ -286,6 +295,7 @@ fn test_nonexistent_target_paths() {
         exclude_patterns: vec![],
         is_recursive: true,
         output_file: None,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);

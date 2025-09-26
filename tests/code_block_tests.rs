@@ -44,6 +44,7 @@ fn test_code_block_formatting() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        show_line_numbers: false,
     };
 
     let file_ctx = FileContext::from_root(config.clone(), temp_dir.path().to_str().unwrap())
@@ -105,6 +106,7 @@ fn test_file_without_extension() {
         include_patterns: vec![],
         exclude_patterns: vec![],
         is_recursive: false,
+        show_line_numbers: false,
     };
 
     let file_ctx = FileContext::from_root(config.clone(), temp_dir.path().to_str().unwrap())
