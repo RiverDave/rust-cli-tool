@@ -152,7 +152,16 @@ impl OutputContext {
 
 fn dump_file_entry(file: &FileEntry) -> String {
     let mut output = String::new();
-    output.push_str(&format!("## FILE: {}\n\n", file.path));
+    // Include file size in bytes in the file header when available
+    output.push_str(&format!(
+        "## FILE: {}{}\n\n",
+        file.path,
+        if file.size > 0 {
+            format!(" ({} bytes)", file.size)
+        } else {
+            String::new()
+        }
+    ));
 
     if let Some(content) = &file.content {
         let language = get_file_extension(&file.path);
