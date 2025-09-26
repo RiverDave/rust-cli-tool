@@ -154,6 +154,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -174,6 +175,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -199,6 +201,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -236,6 +239,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -267,6 +271,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -318,6 +323,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -346,6 +352,7 @@ mod output_context_tests {
             exclude_patterns: vec!["**/*lib*".into()],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -383,6 +390,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -424,6 +432,7 @@ mod output_context_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -458,6 +467,7 @@ mod integration_tests {
             exclude_patterns: vec!["docs/**".into()],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);
@@ -504,6 +514,7 @@ mod integration_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         // We need separate managers since generate() consumes the context
@@ -541,6 +552,7 @@ mod integration_tests {
             exclude_patterns: vec![],
             is_recursive: true,
             recent_only: false,
+            show_line_numbers: false,
         };
 
         let mut manager = ContextManager::new(config);

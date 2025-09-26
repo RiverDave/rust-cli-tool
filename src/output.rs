@@ -131,7 +131,10 @@ impl OutputContext {
 
         // dump each file entry
         for file in &context.file_ctx.file_entries {
-            output.push_str(&format!("  {}\n\n", dump_file_entry(file)));
+            output.push_str(&format!(
+                "  {}\n\n",
+                dump_file_entry(file, context.file_ctx.config.show_line_numbers)
+            ));
         }
 
         output.push_str(&dump_separator_md());
@@ -150,7 +153,7 @@ impl OutputContext {
     }
 }
 
-fn dump_file_entry(file: &FileEntry) -> String {
+fn dump_file_entry(file: &FileEntry, show_line_numbers: bool) -> String {
     let mut output = String::new();
     // Include file size in bytes in the file header when available
     output.push_str(&format!(
@@ -166,10 +169,22 @@ fn dump_file_entry(file: &FileEntry) -> String {
     if let Some(content) = &file.content {
         let language = get_file_extension(&file.path);
         output.push_str(&format!("```{}\n", language));
-        output.push_str(content);
-        if !content.ends_with('\n') {
-            output.push('\n');
+
+        if show_line_numbers {
+            for (i, line) in content.lines().enumerate() {
+                output.push_str(&format!("{}: {}\n", i + 1, line));
+            }
+            // If the original content did not end with a newline, preserve that final line ending
+            if !content.ends_with('\n') {
+                output.push('\n');
+            }
+        } else {
+            output.push_str(content);
+            if !content.ends_with('\n') {
+                output.push('\n');
+            }
         }
+
         output.push_str("```\n");
     } else if file.is_binary {
         output.push_str("*Binary file - content not displayed*\n");

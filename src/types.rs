@@ -25,6 +25,23 @@ pub struct Config {
     pub exclude_patterns: Vec<String>,
     pub is_recursive: bool,
     pub recent_only: bool,
+    // Presentation flags
+    pub show_line_numbers: bool,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            root_path: "".to_string(),
+            target_paths: Vec::new(),
+            output_file: None,
+            include_patterns: Vec::new(),
+            exclude_patterns: Vec::new(),
+            is_recursive: true,
+            show_line_numbers: false,
+            recent_only: false,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]

@@ -37,6 +37,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         exclude_patterns: cli.exclude.unwrap_or_default(),
         is_recursive: cli.recursive,
         recent_only: cli.recent,
+        show_line_numbers: cli.line_numbers,
     };
 
     let mut manager = ContextManager::new(config.clone());

@@ -38,6 +38,7 @@ fn test_line_counting() {
         exclude_patterns: vec![],
         is_recursive: false,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let file_context = FileContext::from_root(config, temp_dir.path().to_str().unwrap())

@@ -43,4 +43,7 @@ pub struct Cli {
     /// Only include files modified within the last 7 days
     #[arg(long = "recent")]
     pub recent: bool,
+    /// Show line numbers in file content output
+    #[arg(short = 'l', long = "line-numbers")]
+    pub line_numbers: bool,
 }

@@ -50,6 +50,7 @@ fn test_build_tree_from_root_basic() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -78,6 +79,7 @@ fn test_build_tree_from_root_with_exclude_patterns() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -106,6 +108,7 @@ fn test_build_tree_from_root_with_include_patterns() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -134,6 +137,7 @@ fn test_build_tree_from_targets_with_specific_files() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -163,6 +167,7 @@ fn test_build_tree_from_targets_with_directory() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -194,6 +199,7 @@ fn test_build_tree_from_targets_root_directory_detection() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -225,6 +231,7 @@ fn test_build_tree_from_targets_with_absolute_path() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -251,6 +258,7 @@ fn test_empty_target_paths_falls_back_to_full_tree() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
@@ -274,6 +282,7 @@ fn test_tree_context_new() {
         is_recursive: true,
         output_file: Some("output.md".to_string()),
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let tree_context = TreeContext::new(config.clone());
@@ -296,6 +305,7 @@ fn test_nonexistent_target_paths() {
         is_recursive: true,
         output_file: None,
         recent_only: false,
+        show_line_numbers: false,
     };
 
     let mut tree_context = TreeContext::new(config);
