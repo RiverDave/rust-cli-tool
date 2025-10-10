@@ -33,44 +33,53 @@ impl ContextManager {
         }
     }
 
+    /// Discover the git repository from the configured root path
+    fn discover_repository(&self) -> Result<Repository, Box<dyn std::error::Error>> {
+        Repository::discover(&self.config.root_path).map_err(|e| {
+            format!(
+                "Failed to discover repository from {}: {}",
+                self.config.root_path, e
+            )
+            .into()
+        })
+    }
+
+    /// Build tree representation based on configuration
+    /// Returns tree string for either full repo or specific target paths
+    fn build_tree_representation(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let mut tree_ctx = TreeContext::new(self.config.clone());
+
+        let tree_str = if self.config.target_paths.is_empty() {
+            tree_ctx.build_tree_from_root()?.tree_str.clone()
+        } else {
+            tree_ctx.build_tree_from_targets()?.tree_str.clone()
+        };
+
+        Ok(tree_str)
+    }
+
+    /// Build the file context based on configuration
+    /// Returns FileContext for either full repo or specific target paths
+    fn build_file_context(&self, repo_root: &str) -> Result<FileContext, Box<dyn std::error::Error>> {
+        if self.config.target_paths.is_empty() {
+            // If no target paths specified, process the entire repo (for tests and compatibility)
+            FileContext::from_root(self.config.clone(), repo_root)
+        } else {
+            // Process only the specified target paths (new CLI behavior)
+            FileContext::from_target_paths(self.config.clone(), repo_root)
+        }
+    }
+
     /// This is the heart of our implementation.
     /// Build the repository context by gathering information from git and the filesystem.
     /// This function initializes the context and populates it with relevant data.
     /// Now discovers repo from current working directory and processes specific target paths.
     pub fn build_context(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        // Discover git repository from the current working directory (root_path)
-        let repo: Repository = match Repository::discover(&self.config.root_path) {
-            Ok(repo) => repo,
-            Err(e) => {
-                return Err(format!(
-                    "Failed to discover repository from {}: {}",
-                    self.config.root_path, e
-                )
-                .into());
-            }
-        };
-
-        // Get the actual repository root path
+        let repo = self.discover_repository()?;
         let actual_repo_root = get_repo_root_path(&repo)?;
 
-        // Build file context with target paths (for CLI) or from root (for tests/empty paths)
-        let file_ctx = if self.config.target_paths.is_empty() {
-            // If no target paths specified, process the entire repo (for tests and compatibility)
-            FileContext::from_root(self.config.clone(), &actual_repo_root)?
-        } else {
-            // Process only the specified target paths (new CLI behavior)
-            FileContext::from_target_paths(self.config.clone(), &actual_repo_root)?
-        };
-
-        // Utilize all modules to build the context
-        // Build tree from the discovered files (rooted at repo root)
-
-        let mut tree_ctx = TreeContext::new(self.config.clone());
-        let tree_repr = if self.config.target_paths.is_empty() {
-            tree_ctx.build_tree_from_root()?.tree_str.clone()
-        } else {
-            tree_ctx.build_tree_from_targets()?.tree_str.clone()
-        };
+        let file_ctx = self.build_file_context(&actual_repo_root)?;
+        let tree_repr = self.build_tree_representation()?;
 
         self.context = Some(RepositoryContext {
             root_path: actual_repo_root,

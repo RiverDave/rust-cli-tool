@@ -81,12 +81,6 @@ impl OutputContext {
 
     /// Generate and output the repository context
     pub fn generate(mut self) -> Result<(), Box<dyn std::error::Error>> {
-        // Ensure the context is built
-
-        // if self.context_manager.context.is_none() {
-        //     self.context_manager.build_context()?;
-        // }
-
         let context = self
             .context_manager
             .context

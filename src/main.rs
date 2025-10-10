@@ -17,11 +17,8 @@
 use clap::Parser;
 use cli_rust::{Cli, Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
 
-#[allow(deprecated)]
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let cli = Cli::parse();
-
-    // Discover repo root from current working directory
+/// Create a Config from parsed CLI arguments
+fn create_config_from_cli(cli: Cli) -> Result<Config, Box<dyn std::error::Error>> {
     let current_dir =
         std::env::current_dir().map_err(|e| format!("Failed to get current directory: {}", e))?;
     let root_path = current_dir
@@ -29,7 +26,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .ok_or("Failed to convert current directory to string")?
         .to_string();
 
-    let config = Config {
+    Ok(Config {
         root_path,
         target_paths: cli.target_paths,
         output_file: cli.output,
@@ -38,7 +35,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         is_recursive: cli.recursive,
         recent_only: cli.recent,
         show_line_numbers: cli.line_numbers,
-    };
+    })
+}
+
+/// Determine output destination from config
+fn determine_output_destination(config: &Config) -> OutputDestination {
+    match &config.output_file {
+        Some(path) => OutputDestination::File(path.clone()),
+        None => OutputDestination::Stdout,
+    }
+}
+
+#[allow(deprecated)]
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let cli = Cli::parse();
+    let config = create_config_from_cli(cli)?;
 
     let mut manager = ContextManager::new(config.clone());
     manager.build_context().unwrap_or_else(|e| {
@@ -46,11 +57,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     });
 
-    // Parse arguments for output format and destination
-    let output_dest = match config.output_file {
-        Some(p) => OutputDestination::File(p),
-        None => OutputDestination::Stdout,
-    };
+    let output_dest = determine_output_destination(&config);
 
     OutputContext::new(manager)
         .format(OutputFormat::Markdown)
