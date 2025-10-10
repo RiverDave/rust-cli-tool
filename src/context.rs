@@ -60,7 +60,10 @@ impl ContextManager {
 
     /// Build the file context based on configuration
     /// Returns FileContext for either full repo or specific target paths
-    fn build_file_context(&self, repo_root: &str) -> Result<FileContext, Box<dyn std::error::Error>> {
+    fn build_file_context(
+        &self,
+        repo_root: &str,
+    ) -> Result<FileContext, Box<dyn std::error::Error>> {
         if self.config.target_paths.is_empty() {
             // If no target paths specified, process the entire repo (for tests and compatibility)
             FileContext::from_root(self.config.clone(), repo_root)
