@@ -246,6 +246,62 @@ fn dump_file_context_summary(file_context: &FileContext) -> String {
     let total_lines: u64 = file_context.file_entries.iter().map(|f| f.lines).sum();
     output.push_str(&format!("Total lines across all files: {}\n", total_lines));
 
+    // Language breakdown (by file extension)
+    use std::collections::HashMap;
+    let mut lang_counts: HashMap<String, (u64, u64, u64)> = HashMap::new();
+
+    for f in &file_context.file_entries {
+        // Use extension as a proxy for language (simple heuristic)
+        let ext = match f.path.rsplit('.').next() {
+            Some(seg) if seg != f.path => seg.to_lowercase(),
+            _ => String::from(""),
+        };
+
+        let entry = lang_counts.entry(ext).or_insert((0, 0, 0));
+        // (files, lines, bytes)
+        entry.0 += 1;
+        entry.1 += f.lines;
+        entry.2 += f.size;
+    }
+
+    if !lang_counts.is_empty() {
+        // Sort by total lines desc
+        let mut items: Vec<(String, (u64, u64, u64))> = lang_counts.into_iter().collect();
+        items.sort_by(|a, b| b.1.1.cmp(&a.1.1));
+
+        output.push_str("\n### Language breakdown (by extension)\n\n");
+        for (ext, (files, lines, bytes)) in items.iter().take(10) {
+            let pct = if total_lines > 0 {
+                (*lines as f64 / total_lines as f64) * 100.0
+            } else {
+                0.0
+            };
+            let label = if ext.is_empty() { "(no-ext)" } else { ext };
+            output.push_str(&format!(
+                "- {}: {} file(s), {} lines ({:.1}%), {:.2} MB\n",
+                label,
+                files,
+                lines,
+                pct,
+                *bytes as f64 / 1_048_576.0
+            ));
+        }
+    }
+
+    // Top files by line count (quick hotspot view)
+    let mut files_sorted = file_context.file_entries.clone();
+    files_sorted.sort_by(|a, b| b.lines.cmp(&a.lines).then_with(|| a.path.cmp(&b.path)));
+
+    output.push_str("\n### Top files by lines\n\n");
+    for f in files_sorted.iter().take(10) {
+        output.push_str(&format!(
+            "- {}: {} lines, {:.2} KB\n",
+            f.path,
+            f.lines,
+            f.size as f64 / 1024.0
+        ));
+    }
+
     output
 }
 
