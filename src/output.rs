@@ -267,7 +267,7 @@ fn dump_file_context_summary(file_context: &FileContext) -> String {
     if !lang_counts.is_empty() {
         // Sort by total lines desc
         let mut items: Vec<(String, (u64, u64, u64))> = lang_counts.into_iter().collect();
-        items.sort_by(|a, b| b.1.1.cmp(&a.1.1));
+        items.sort_by(|a, b| b.1 .1.cmp(&a.1 .1));
 
         output.push_str("\n### Language breakdown (by extension)\n\n");
         for (ext, (files, lines, bytes)) in items.iter().take(10) {

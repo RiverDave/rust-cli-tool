@@ -14,9 +14,9 @@
 //===----------------------------------------------------------------------===//
 //
 
-use crate::TreeContext;
 use crate::git;
 use crate::types::*;
+use crate::TreeContext;
 use git2::Repository;
 
 #[derive(Debug, Clone)]

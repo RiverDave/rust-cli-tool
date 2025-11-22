@@ -13,8 +13,10 @@
 //===----------------------------------------------------------------------===//
 //
 
-use rusty_repo_context_manager::{Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
 use git2::Repository;
+use rusty_repo_context_manager::{
+    Config, ContextManager, OutputContext, OutputDestination, OutputFormat,
+};
 use std::fs::{self, File};
 use std::io::Write;
 use tempfile::TempDir;

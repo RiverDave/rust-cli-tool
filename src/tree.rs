@@ -112,10 +112,11 @@ impl TreeContext {
 
             if let (Ok(canonical_target), Ok(canonical_root)) =
                 (target_path.canonicalize(), root_path.canonicalize())
-                && canonical_target == canonical_root
             {
-                // Target is the root directory, build full tree instead
-                return self.build_tree_from_root();
+                if canonical_target == canonical_root {
+                    // Target is the root directory, build full tree instead
+                    return self.build_tree_from_root();
+                }
             }
         }
 
@@ -131,25 +132,26 @@ impl TreeContext {
             };
 
             // Add the target path and all its parent directories
-            if let Ok(canonical_target) = target_path.canonicalize()
-                && let Ok(canonical_root) = root_path.canonicalize()
-                && canonical_target.starts_with(&canonical_root)
-            {
-                // If target is a directory, we'll want to show all its contents
-                if canonical_target.is_dir() {
-                    _ = target_directories.insert(canonical_target.clone());
-                }
+            if let Ok(canonical_target) = target_path.canonicalize() {
+                if let Ok(canonical_root) = root_path.canonicalize() {
+                    if canonical_target.starts_with(&canonical_root) {
+                        // If target is a directory, we'll want to show all its contents
+                        if canonical_target.is_dir() {
+                            _ = target_directories.insert(canonical_target.clone());
+                        }
 
-                let mut current = canonical_target.as_path();
-                while current != canonical_root {
-                    _ = tree_paths.insert(current.to_path_buf());
-                    if let Some(parent) = current.parent() {
-                        current = parent;
-                    } else {
-                        break;
+                        let mut current = canonical_target.as_path();
+                        while current != canonical_root {
+                            _ = tree_paths.insert(current.to_path_buf());
+                            if let Some(parent) = current.parent() {
+                                current = parent;
+                            } else {
+                                break;
+                            }
+                        }
+                        _ = tree_paths.insert(canonical_root.clone());
                     }
                 }
-                _ = tree_paths.insert(canonical_root.clone());
             }
         }
 
@@ -214,10 +216,10 @@ impl TreeContext {
         let path_str = relative_path.to_string_lossy().to_string();
 
         // Check exclude patterns first
-        if let Some(exclude) = exclude_set
-            && exclude.is_match(&path_str)
-        {
-            return false;
+        if let Some(exclude) = exclude_set {
+            if exclude.is_match(&path_str) {
+                return false;
+            }
         }
 
         // For directories, always include if no specific exclude rule matched

@@ -91,7 +91,7 @@ fn test_build_tree_from_root_with_exclude_patterns() {
     assert!(tree_str.contains("src"));
     assert!(tree_str.contains("docs"));
     assert!(!tree_str.contains("Cargo.toml")); // Should be excluded
-    // Note: tests might still appear as directory name, let's check specific file
+                                               // Note: tests might still appear as directory name, let's check specific file
     assert!(!tree_str.contains("integration.rs")); // Should be excluded
 }
 
