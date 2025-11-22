@@ -1,4 +1,4 @@
-# Simple Makefile for cli-rust project
+# Simple Makefile for rusty-repo-context-manager project
 
 .PHONY: help build test clean fmt clippy check all
 

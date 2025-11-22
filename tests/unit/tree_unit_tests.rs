@@ -9,8 +9,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-use cli_rust::tree::TreeContext;
-use cli_rust::types::Config;
+use rusty_repo_context_manager::tree::TreeContext;
+use rusty_repo_context_manager::types::Config;
 use std::fs;
 use tempfile::TempDir;
 

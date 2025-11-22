@@ -1,0 +1,19 @@
+# Exclude IDE and editor files
+.vscode/
+.idea/
+
+# Exclude CI/CD files (not needed in published crate)
+.github/
+
+# Exclude development config files
+.pre-commit-config.yaml
+rust-analyzer.toml
+rust-toolchain.toml
+
+# Exclude backup files
+*.orig
+*~
+
+# Exclude test data that's not needed
+tests/recent_test_files/
+

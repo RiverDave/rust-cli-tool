@@ -15,7 +15,7 @@
 //
 
 use clap::Parser;
-use cli_rust::{Cli, Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
+use rusty_repo_context_manager::{Cli, Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
 
 /// Create a Config from parsed CLI arguments
 fn create_config_from_cli(cli: Cli) -> Result<Config, Box<dyn std::error::Error>> {

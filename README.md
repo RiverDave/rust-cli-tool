@@ -13,18 +13,34 @@ A simple Rust CLI tool that packages your codebase for LLMs. It scans directorie
 
 ## Installation
 
-### Prerequisites
+### Install from crates.io (Recommended)
+
+The easiest way to install `rusty-repo-context-manager` is using Cargo:
+
+```bash
+cargo install rusty-repo-context-manager
+```
+
+After installation, you can use it directly:
+
+```bash
+rusty-repo-context-manager .
+```
+
+### Build from Source
+
+#### Prerequisites
 
 - [Install Rust](https://rustup.rs/) (1.70+ required)
 - Git (optional, for repository features)
 
-### Build and Run
+#### Build and Run
 
 ```bash
 git clone https://github.com/RiverDave/rust-cli-tool.git
 cd rust-cli-tool
 cargo build --release
-./target/release/cli-rust
+./target/release/rusty-repo-context-manager
 ```
 
 ## Quick Start
@@ -33,19 +49,19 @@ cargo build --release
 
 ```bash
 # Scan current directory
-./cli-rust .
+./rusty-repo-context-manager .
 
 # Include only source files
-./cli-rust . -i "src/*"
+./rusty-repo-context-manager . -i "src/*"
 
 # Exclude build artifacts
-./cli-rust . -e "target/*" -e "*.log"
+./rusty-repo-context-manager . -e "target/*" -e "*.log"
 
 # Save to file
-./cli-rust . -o output.txt
+./rusty-repo-context-manager . -o output.txt
 
 # Only include files modified in the last 7 days
-./cli-rust . --recent
+./rusty-repo-context-manager . --recent
 ```
 
 ## Command Options
@@ -84,19 +100,19 @@ Examples:
 
 ```bash
 # Include only Rust and Markdown sources
-./cli-rust . --include 'src/**/*.rs' '**/*.md'
+./rusty-repo-context-manager . --include 'src/**/*.rs' '**/*.md'
 
 # Exclude build artifacts and logs
-./cli-rust . --exclude 'target/**' '**/*.log'
+./rusty-repo-context-manager . --exclude 'target/**' '**/*.log'
 
 # Combine include + exclude
-./cli-rust . --include 'src/**/*.rs' --exclude 'src/generated/**'
+./rusty-repo-context-manager . --include 'src/**/*.rs' --exclude 'src/generated/**'
 
 # Only recent files (last 7 days)
-./cli-rust . --recent
+./rusty-repo-context-manager . --recent
 
 # Combine recent with include patterns
-./cli-rust . --recent --include 'src/**/*.rs' --output recent_changes
+./rusty-repo-context-manager . --recent --include 'src/**/*.rs' --output recent_changes
 ```
 
 Gotchas:
