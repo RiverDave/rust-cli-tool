@@ -1,4 +1,4 @@
-use cli_rust::{Config, FileContext};
+use rusty_repo_context_manager::{Config, FileContext};
 use std::fs::{self, File};
 use std::io::Write;
 

@@ -13,7 +13,7 @@
 //===----------------------------------------------------------------------===//
 //
 
-use cli_rust::{Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
+use rusty_repo_context_manager::{Config, ContextManager, OutputContext, OutputDestination, OutputFormat};
 use git2::Repository;
 use std::fs::{self, File};
 use std::io::Write;

@@ -12,7 +12,7 @@
 // Simple test to demonstrate line counting capabilities
 //===----------------------------------------------------------------------===//
 
-use cli_rust::types::{Config, FileContext};
+use rusty_repo_context_manager::types::{Config, FileContext};
 use std::fs;
 use tempfile::TempDir;
 

@@ -1,6 +1,6 @@
 # Simple CI/CD Pipeline
 
-This document explains the basic CI/CD setup for the cli-rust project.
+This document explains the basic CI/CD setup for the rusty-repo-context-manager project.
 
 ## What It Does
 

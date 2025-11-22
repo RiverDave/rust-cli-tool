@@ -12,7 +12,7 @@
 // Simple test for summary calculation functionality
 //===----------------------------------------------------------------------===//
 
-use cli_rust::types::{Config, FileContext};
+use rusty_repo_context_manager::types::{Config, FileContext};
 use std::fs;
 use tempfile::TempDir;
 

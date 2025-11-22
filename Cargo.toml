@@ -1,13 +1,16 @@
 [package]
-name = "cli-rust"
-version = "0.1.0"
-edition = "2024"
+name = "rusty-repo-context-manager"
+version = "0.9.0"
+edition = "2021"
 authors = ["David Rivera <davidriverg@gmail.com>"]
-description = "A Rust CLI tool for file operations"
+description = "A Rust CLI tool that packages your codebase for LLMs with tree visualization and git integration"
 license = "MIT"
-repository = "https://github.com/RiverDave/cli-rust"
-keywords = ["cli", "files", "rust"]
-categories = ["command-line-utilities"]
+repository = "https://github.com/RiverDave/rust-cli-tool"
+homepage = "https://github.com/RiverDave/rust-cli-tool"
+documentation = "https://docs.rs/rusty-repo-context-manager"
+readme = "README.md"
+keywords = ["cli", "llm", "repository", "context", "packaging"]
+categories = ["command-line-utilities", "development-tools"]
 
 [dependencies]
 clap = { version = "4.5.47", features = ["derive"] }

@@ -15,7 +15,7 @@
 
 #[cfg(test)]
 mod tests {
-    use cli_rust::{OutputDestination, OutputFormat};
+    use rusty_repo_context_manager::{OutputDestination, OutputFormat};
 
     #[test]
     fn test_output_format_extensions() {

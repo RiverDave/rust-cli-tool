@@ -12,8 +12,8 @@
 // Tests for code block formatting in markdown output
 //===----------------------------------------------------------------------===//
 
-use cli_rust::types::{Config, FileContext, GitInfo, RepositoryContext};
-use cli_rust::{ContextManager, OutputContext, OutputDestination, OutputFormat};
+use rusty_repo_context_manager::types::{Config, FileContext, GitInfo, RepositoryContext};
+use rusty_repo_context_manager::{ContextManager, OutputContext, OutputDestination, OutputFormat};
 use std::fs;
 use tempfile::TempDir;
 
