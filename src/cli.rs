@@ -18,6 +18,7 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(name = "repo-context")]
 #[command(about = "Package repository context for LLMs")]
+#[command(version = "Repository Context Packager v0.1.0\nBuilt with Rust")]
 /// Main CLI structure for the application.
 pub struct Cli {
     /// Target paths/files to process (required)
